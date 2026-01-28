@@ -53,5 +53,8 @@
     "dist",
     "CHANGELOG.md",
     "!**/*.tsbuildinfo"
-  ]
+  ],
+  "devDependencies": {
+    "vitest": "*"
+  }
 }
