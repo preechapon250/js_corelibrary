@@ -40,9 +40,8 @@ export abstract class BaseLoginManager<TStorage extends TokenStorage> {
       }
     }
 
-    // Listen for storage events to detect token updates from other tabs
-    if (typeof globalThis.window !== "undefined" && typeof globalThis.localStorage !== "undefined") {
-      globalThis.window.addEventListener("storage", this.handleStorageEvent.bind(this))
+    if (typeof globalThis.window !== "undefined" && typeof localStorage !== "undefined") {
+      globalThis.addEventListener("storage", this.handleStorageEvent.bind(this))
     }
   }
 
@@ -86,9 +85,7 @@ export abstract class BaseLoginManager<TStorage extends TokenStorage> {
   }
 
   protected async tryRefreshTokenInternal(token: Token): Promise<boolean> {
-    // Try to acquire the refresh lock
     if (!this.acquireRefreshLock()) {
-      // Another tab/instance is refreshing, wait for it to complete
       return await this.waitForRefreshCompletion()
     }
 
@@ -116,7 +113,7 @@ export abstract class BaseLoginManager<TStorage extends TokenStorage> {
 
   private acquireRefreshLock(): boolean {
     if (typeof localStorage === "undefined") {
-      return true // No cross-tab coordination needed
+      return true
     }
 
     const now = Date.now()
@@ -124,11 +121,9 @@ export abstract class BaseLoginManager<TStorage extends TokenStorage> {
 
     if (lockData) {
       const lockTime = Number.parseInt(lockData, 10)
-      // Check if lock is still valid (not expired)
       if (now - lockTime < this.REFRESH_LOCK_TIMEOUT) {
-        return false // Lock is held by another tab
+        return false
       }
-      // Lock expired, we can take it over
     }
 
     localStorage.setItem(this.REFRESH_LOCK_KEY, now.toString())
@@ -146,9 +141,8 @@ export abstract class BaseLoginManager<TStorage extends TokenStorage> {
       return false
     }
 
-    // Wait for the lock to be released or timeout
     const startTime = Date.now()
-    const pollInterval = 100 // Check every 100ms
+    const pollInterval = 100
 
     return new Promise(resolve => {
       const checkLock = async () => {
@@ -156,12 +150,9 @@ export abstract class BaseLoginManager<TStorage extends TokenStorage> {
         const elapsed = Date.now() - startTime
 
         if (!lockData || elapsed > this.REFRESH_LOCK_TIMEOUT) {
-          // Lock released or timeout - check if token was refreshed
           const currentToken = await this.storage.getToken()
-          // Compare tokens to see if refresh happened
           resolve(currentToken !== null)
         } else {
-          // Lock still held, check again
           setTimeout(checkLock, pollInterval)
         }
       }
@@ -171,11 +162,7 @@ export abstract class BaseLoginManager<TStorage extends TokenStorage> {
   }
 
   private handleStorageEvent(event: StorageEvent): void {
-    // Detect when tokens are updated in another tab
-    if (
-      (event.key === "token" || event.key === "refresh_token") && // Token was updated, notify callbacks if we're waiting for refresh
-      this.refreshTokenCallbacks.length > 0
-    ) {
+    if ((event.key === "token" || event.key === "refresh_token") && this.refreshTokenCallbacks.length > 0) {
       this.refreshTokenCallbacks.forEach(c => c(true))
       this.refreshTokenCallbacks = []
     }
