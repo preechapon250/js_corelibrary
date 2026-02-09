@@ -27,6 +27,12 @@
       "types": "./dist/contracts.d.ts",
       "import": "./dist/contracts.js",
       "default": "./dist/contracts.js"
+    },
+    "./publish": {
+      "types": "./dist/publish.d.ts",
+      "import": "./dist/publish.js",
+      "require": "./dist/publish.cjs",
+      "default": "./dist/publish.js"
     }
   },
   "publishConfig": {

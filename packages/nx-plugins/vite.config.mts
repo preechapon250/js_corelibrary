@@ -21,6 +21,7 @@ export default defineConfig(() => ({
         intl: "src/intl.ts",
         proxy: "src/proxy.ts",
         contracts: "src/contracts.ts",
+        publish: "src/publish.ts",
       },
     },
     rollupOptions: {

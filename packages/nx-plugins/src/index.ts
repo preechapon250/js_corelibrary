@@ -6,3 +6,6 @@ export type { IntlPluginOptions } from "./intl";
 
 export { createNodesV2 as proxyPlugin } from "./proxy";
 export type { ProxyPluginOptions } from "./proxy";
+
+export { createNodesV2 as publishPlugin } from "./publish";
+export type { PublishPluginOptions } from "./publish";

@@ -8,6 +8,12 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "plugins": [
     {
+      "plugin": "@leancodepl/nx-plugins/publish",
+      "options": {
+        "targetName": "publish"
+      }
+    },
+    {
       "plugin": "@nx/js/typescript",
       "options": {
         "typecheck": {
