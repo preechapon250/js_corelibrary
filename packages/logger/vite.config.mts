@@ -19,6 +19,8 @@ export default defineConfig(() => ({
       entry: {
         index: "src/index.ts",
         cli: "src/cli.ts",
+        json: "src/json.ts",
+        nest: "src/nest.ts",
       },
       name: "@leancodepl/logger",
       fileName: (format, entryName) => (format === "es" ? `${entryName}.js` : `${entryName}.cjs`),
