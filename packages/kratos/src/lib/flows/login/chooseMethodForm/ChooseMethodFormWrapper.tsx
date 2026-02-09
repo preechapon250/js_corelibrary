@@ -1,7 +1,14 @@
 import { ComponentProps, ComponentType, ReactNode, useCallback, useMemo } from "react"
 import { toUpperFirst } from "@leancodepl/utils"
 import { useFormErrors } from "../../../hooks"
-import { AuthError, getAllOidcProviderUiNodes, getNodeById, getOidcProviderUiNode, OidcProviderComponents, OidcProvidersConfig } from "../../../utils"
+import {
+  AuthError,
+  getAllOidcProviderUiNodes,
+  getNodeById,
+  isOidcProviderInConfig,
+  OidcProviderComponents,
+  OidcProvidersConfig,
+} from "../../../utils"
 import { Submit } from "../../fields"
 import { useExistingIdentifierFromFlow, useGetLoginFlow } from "../hooks"
 import { OnLoginFlowError } from "../types"
@@ -17,25 +24,29 @@ type ChooseMethodFormPropsLoadedBase<TOidcProvidersConfig extends OidcProvidersC
   oidcProviders: OidcProviderComponents<TOidcProvidersConfig>
 }
 
-type ChooseMethodFormPropsLoadedRefresh<TOidcProvidersConfig extends OidcProvidersConfig = readonly []> = ChooseMethodFormPropsLoadedBase<TOidcProvidersConfig> & {
-  isRefresh: true
-  identifier?: string
-  passwordFields?: {
-    Password: ComponentType<{ children: ReactNode }>
-    Submit: ComponentType<{ children: ReactNode }>
+type ChooseMethodFormPropsLoadedRefresh<TOidcProvidersConfig extends OidcProvidersConfig = readonly []> =
+  ChooseMethodFormPropsLoadedBase<TOidcProvidersConfig> & {
+    isRefresh: true
+    identifier?: string
+    passwordFields?: {
+      Password: ComponentType<{ children: ReactNode }>
+      Submit: ComponentType<{ children: ReactNode }>
+    }
   }
-}
 
-type ChooseMethodFormPropsLoaded<TOidcProvidersConfig extends OidcProvidersConfig = readonly []> = ChooseMethodFormPropsLoadedBase<TOidcProvidersConfig> & {
-  isRefresh?: false
-  passwordFields: {
-    Identifier: ComponentType<{ children: ReactNode }>
-    Password: ComponentType<{ children: ReactNode }>
-    Submit: ComponentType<{ children: ReactNode }>
+type ChooseMethodFormPropsLoaded<TOidcProvidersConfig extends OidcProvidersConfig = readonly []> =
+  ChooseMethodFormPropsLoadedBase<TOidcProvidersConfig> & {
+    isRefresh?: false
+    passwordFields: {
+      Identifier: ComponentType<{ children: ReactNode }>
+      Password: ComponentType<{ children: ReactNode }>
+      Submit: ComponentType<{ children: ReactNode }>
+    }
   }
-}
 
-export type ChooseMethodFormProps<TOidcProvidersConfig extends OidcProvidersConfig = readonly []> = ChooseMethodFormPropsLoaded<TOidcProvidersConfig> | ChooseMethodFormPropsLoadedRefresh<TOidcProvidersConfig>
+export type ChooseMethodFormProps<TOidcProvidersConfig extends OidcProvidersConfig = readonly []> =
+  | ChooseMethodFormPropsLoaded<TOidcProvidersConfig>
+  | ChooseMethodFormPropsLoadedRefresh<TOidcProvidersConfig>
 
 type ChooseMethodFormWrapperProps<TOidcProvidersConfig extends OidcProvidersConfig = readonly []> = {
   chooseMethodForm: ComponentType<ChooseMethodFormProps<TOidcProvidersConfig>>
@@ -66,47 +77,22 @@ export function ChooseMethodFormWrapper<TOidcProvidersConfig extends OidcProvide
     if (!loginFlow) return {}
 
     const availableProviders = getAllOidcProviderUiNodes(loginFlow.ui.nodes)
-    const configuredProviderIds = new Set(oidcProvidersConfig?.map(p => p.id))
-    const components: Record<string, ComponentType<{ children: ReactNode }>> = {}
+    const components: OidcProviderComponents<TOidcProvidersConfig> = {}
 
     availableProviders.forEach(node => {
       const providerId = node.attributes.value
-      
-      // Only include providers that are both available in the flow and configured (or all if no config)
-      if (!configuredProviderIds || configuredProviderIds.size === 0 || configuredProviderIds.has(providerId)) {
+
+      if (isOidcProviderInConfig(oidcProvidersConfig, providerId)) {
         const providerName = toUpperFirst(providerId)
-        
+
         components[providerName] = ({ children }: { children: ReactNode }) => (
           <Oidc provider={providerId}>{children}</Oidc>
         )
       }
     })
 
-    return components as OidcProviderComponents<TOidcProvidersConfig>
+    return components
   }, [loginFlow, oidcProvidersConfig])
-
-  const oidcProviderComponentsForRefresh = useMemo<OidcProviderComponents<TOidcProvidersConfig>>(() => {
-    if (!loginFlow || !isRefresh) return {}
-
-    const configuredProviderIds = new Set(oidcProvidersConfig?.map(p => p.id))
-    const components: Record<string, ComponentType<{ children: ReactNode }>> = {}
-
-    getAllOidcProviderUiNodes(loginFlow.ui.nodes).forEach(node => {
-      const providerId = node.attributes.value
-      
-      // Only include providers that are both available in the flow and configured (or all if no config)
-      if ((!configuredProviderIds || configuredProviderIds.size === 0 || configuredProviderIds.has(providerId)) && 
-          getOidcProviderUiNode(loginFlow.ui.nodes, providerId)) {
-        const providerName = toUpperFirst(providerId)
-        
-        components[providerName] = ({ children }: { children: ReactNode }) => (
-          <Oidc provider={providerId}>{children}</Oidc>
-        )
-      }
-    })
-
-    return components as OidcProviderComponents<TOidcProvidersConfig>
-  }, [loginFlow, isRefresh, oidcProvidersConfig])
 
   if (!loginFlow) return null
 
@@ -124,8 +110,8 @@ export function ChooseMethodFormWrapper<TOidcProvidersConfig extends OidcProvide
             identifier={existingIdentifier}
             isSubmitting={passwordForm.state.isSubmitting}
             isValidating={passwordForm.state.isValidating}
-            oidcProviders={oidcProviderComponentsForRefresh}
-            Passkey={getNodeById(loginFlow.ui.nodes, "passkey_login") ? PasskeyWithFormErrorHandler : (() => null)}
+            oidcProviders={oidcProviderComponents}
+            Passkey={getNodeById(loginFlow.ui.nodes, "passkey_login") ? PasskeyWithFormErrorHandler : () => null}
             passwordFields={
               getNodeById(loginFlow.ui.nodes, "password")
                 ? {

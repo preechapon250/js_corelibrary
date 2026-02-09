@@ -9,6 +9,7 @@ import {
   UiNodeTypeEnum,
 } from "../kratos"
 import { GetFlowError } from "../types"
+import { OidcProvidersConfig } from "./oidcProviders"
 
 export function getNodeById(nodes: UiNode[] | undefined, name: string) {
   return nodes?.find(node => getNodeId(node) === name)
@@ -109,6 +110,12 @@ export const getOidcProviderUiNode = (nodes: UiNode[] | undefined, provider: str
 
 export const getAllOidcProviderUiNodes = (nodes: UiNode[] | undefined): OidcProviderUiNode[] =>
   nodes?.filter((node): node is OidcProviderUiNode => isOidcProviderUiNode(node)) ?? []
+
+export const isOidcProviderInConfig = <TOidcProvidersConfig extends OidcProvidersConfig>(
+  config: TOidcProvidersConfig | undefined,
+  providerId: string,
+): providerId is TOidcProvidersConfig[number]["id"] =>
+  config !== undefined && config.some(provider => provider.id === providerId)
 
 export const handleFlowErrorResponse = async <TFlow>({ error }: { error: unknown }): Promise<TFlow | undefined> =>
   (await handleFlowError<TFlow>({

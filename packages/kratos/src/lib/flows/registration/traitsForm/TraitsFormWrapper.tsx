@@ -1,7 +1,14 @@
 import { ComponentType, ReactNode, useMemo } from "react"
 import { toUpperFirst } from "@leancodepl/utils"
 import { useFormErrors } from "../../../hooks"
-import { AuthError, getAllOidcProviderUiNodes, OidcProviderComponents, OidcProvidersConfig, TraitsConfig } from "../../../utils"
+import {
+  AuthError,
+  getAllOidcProviderUiNodes,
+  isOidcProviderInConfig,
+  OidcProviderComponents,
+  OidcProvidersConfig,
+  TraitsConfig,
+} from "../../../utils"
 import { Submit } from "../../fields"
 import { useGetRegistrationFlow } from "../hooks"
 import { OnRegistrationFlowError } from "../types"
@@ -19,7 +26,7 @@ type TraitsComponents<TTraitsConfig extends TraitsConfig> = {
 
 export type TraitsFormProps<
   TTraitsConfig extends TraitsConfig,
-  TOidcProvidersConfig extends OidcProvidersConfig = readonly []
+  TOidcProvidersConfig extends OidcProvidersConfig = readonly [],
 > = {
   traitFields: TraitsComponents<TTraitsConfig> & {
     Submit: ComponentType<{ children: ReactNode }>
@@ -32,7 +39,7 @@ export type TraitsFormProps<
 
 type TraitsFormWrapperProps<
   TTraitsConfig extends TraitsConfig,
-  TOidcProvidersConfig extends OidcProvidersConfig = readonly []
+  TOidcProvidersConfig extends OidcProvidersConfig = readonly [],
 > = {
   traitsConfig: TTraitsConfig
   oidcProvidersConfig?: TOidcProvidersConfig
@@ -43,7 +50,7 @@ type TraitsFormWrapperProps<
 
 export function TraitsFormWrapper<
   TTraitsConfig extends TraitsConfig,
-  TOidcProvidersConfig extends OidcProvidersConfig = readonly []
+  TOidcProvidersConfig extends OidcProvidersConfig = readonly [],
 >({
   traitsConfig,
   oidcProvidersConfig,
@@ -72,23 +79,21 @@ export function TraitsFormWrapper<
     if (!registrationFlow) return {}
 
     const availableProviders = getAllOidcProviderUiNodes(registrationFlow.ui.nodes)
-    const configuredProviderIds = new Set(oidcProvidersConfig?.map(p => p.id))
-    const components: Record<string, ComponentType<{ children: ReactNode }>> = {}
+    const components: OidcProviderComponents<TOidcProvidersConfig> = {}
 
     availableProviders.forEach(node => {
       const providerId = node.attributes.value
-      
-      // Only include providers that are both available in the flow and configured (or all if no config)
-      if (!configuredProviderIds || configuredProviderIds.size === 0 || configuredProviderIds.has(providerId)) {
+
+      if (isOidcProviderInConfig(oidcProvidersConfig, providerId)) {
         const providerName = toUpperFirst(providerId)
-        
+
         components[providerName] = ({ children }: { children: ReactNode }) => (
           <Oidc provider={providerId}>{children}</Oidc>
         )
       }
     })
 
-    return components as OidcProviderComponents<TOidcProvidersConfig>
+    return components
   }, [registrationFlow, oidcProvidersConfig])
 
   return (

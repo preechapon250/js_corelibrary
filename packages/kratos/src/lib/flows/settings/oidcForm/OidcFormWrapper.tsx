@@ -1,13 +1,19 @@
 import { ComponentType, ReactNode, useMemo } from "react"
 import { toUpperFirst } from "@leancodepl/utils"
-import { getAllOidcProviderUiNodes, OidcProviderComponents, OidcProvidersConfig } from "../../../utils"
+import {
+  getAllOidcProviderUiNodes,
+  isOidcProviderInConfig,
+  OidcProviderComponents,
+  OidcProvidersConfig,
+} from "../../../utils"
 import { useGetSettingsFlow } from "../hooks"
 import { Oidc } from "./fields"
 import { getOidcProviderType } from "./providers"
 
-export type OidcFormProps<TOidcProvidersConfig extends OidcProvidersConfig = readonly []> = OidcProviderComponents<TOidcProvidersConfig> & {
-  isLoading: boolean
-}
+export type OidcFormProps<TOidcProvidersConfig extends OidcProvidersConfig = readonly []> =
+  OidcProviderComponents<TOidcProvidersConfig> & {
+    isLoading: boolean
+  }
 
 type OidcFormWrapperProps<TOidcProvidersConfig extends OidcProvidersConfig = readonly []> = {
   oidcForm: ComponentType<OidcFormProps<TOidcProvidersConfig>>
@@ -21,23 +27,22 @@ export function OidcFormWrapper<TOidcProvidersConfig extends OidcProvidersConfig
   const { data: settingsFlow } = useGetSettingsFlow()
 
   const oidcComponents = useMemo<OidcFormProps<TOidcProvidersConfig>>(() => {
-    if (!settingsFlow) {
-      return { isLoading: true }
-    }
+    if (!settingsFlow)
+      return {
+        isLoading: true,
+      }
 
     const availableProviders = getAllOidcProviderUiNodes(settingsFlow.ui.nodes)
-    const configuredProviderIds = new Set(oidcProvidersConfig?.map(p => p.id))
-    const providerComponents: Record<string, ComponentType<{ children: ReactNode }>> = {}
+    const components: OidcProviderComponents<TOidcProvidersConfig> = {}
 
     availableProviders.forEach(node => {
       const providerId = node.attributes.value
       const type = getOidcProviderType(providerId, settingsFlow.ui.nodes)
 
-      // Only include providers that are both available in the flow and configured (or all if no config)
-      if (type && (!configuredProviderIds || configuredProviderIds.size === 0 || configuredProviderIds.has(providerId))) {
+      if (type && isOidcProviderInConfig(oidcProvidersConfig, providerId)) {
         const providerName = toUpperFirst(providerId)
-        
-        providerComponents[providerName] = ({ children }: { children: ReactNode }) => (
+
+        components[providerName] = ({ children }: { children: ReactNode }) => (
           <Oidc provider={providerId} type={type}>
             {children}
           </Oidc>
@@ -47,8 +52,8 @@ export function OidcFormWrapper<TOidcProvidersConfig extends OidcProvidersConfig
 
     return {
       isLoading: false,
-      ...providerComponents,
-    } as OidcFormProps<TOidcProvidersConfig>
+      ...components,
+    }
   }, [settingsFlow, oidcProvidersConfig])
 
   return <OidcForm {...oidcComponents} />
