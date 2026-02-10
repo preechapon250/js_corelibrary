@@ -47,7 +47,7 @@ function createJsonLoggerMethod(logLevel: LogLevel, enabledLogLevels: LogLevel[]
     const entry = {
       level: levelLabel,
       timestamp: new Date().toISOString(),
-      msg: message,
+      message,
       ...(Object.keys(context).length > 0 ? { context } : {}),
     }
     process.stdout.write(JSON.stringify(entry) + "\n")
