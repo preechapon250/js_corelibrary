@@ -28,7 +28,7 @@ export default defineConfig(() => ({
     name: "@leancodepl/login-manager",
     watch: false,
     globals: true,
-    environment: "node",
+    environment: "jsdom",
     passWithNoTests: true,
     include: ["{src,__tests__}/**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"],
     reporters: ["default"],
