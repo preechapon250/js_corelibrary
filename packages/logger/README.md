@@ -2,6 +2,13 @@
 
 A lightweight, type-safe logger with middleware support and contextual messages.
 
+**Entry points:**
+
+- **`@leancodepl/logger`** – Core API below (custom handlers, context, middleware).
+- **`@leancodepl/logger/cli`** – Colored console preset with log levels: `createCliLogger`, `LogLevel`, `allLogLevels`.
+- **`@leancodepl/logger/json`** – JSON lines to stdout: `createJsonLogger` with the same level options as CLI.
+- **`@leancodepl/logger/nest`** – NestJS adapter: `createNestJsonLogger()` implementing `LoggerService` with JSON output.
+
 ## Creating a Logger
 
 ```typescript
@@ -150,15 +157,11 @@ logger2.info("test") // "[INFO] test"
 
 ---
 
-# CLI Logger (from loggers package)
+## CLI preset (`@leancodepl/logger/cli`)
 
-Pre-built CLI logger using `@leancodepl/logger`.
+Colored console logger with log levels for CLI applications.
 
-## CLI Logger
-
-A colored console logger with log levels for CLI applications.
-
-### Basic Usage
+### Basic usage
 
 ```typescript
 import { createCliLogger } from "@leancodepl/logger/cli"
@@ -173,7 +176,7 @@ logger.debug("Debug information")
 logger.verbose("Verbose output")
 ```
 
-### Log Levels
+### Log levels
 
 Control which messages are shown by setting `enabledLogLevels` (array of levels to include):
 
@@ -196,7 +199,7 @@ Available log levels (from least to most verbose):
 - `LogLevel.Verbose` (4) - All above plus verbose
 - `LogLevel.Debug` (5) - Everything
 
-### Adding Context
+### Adding context
 
 Use `withContext` to add contextual information:
 
@@ -207,7 +210,7 @@ const requestLogger = logger.withContext({ requestId: "req-123" })
 requestLogger.info(({ requestId }) => `Processing request ${requestId}`)
 ```
 
-### Adding Middleware
+### Adding middleware
 
 Use `withMiddleware` to customize logging behavior:
 
@@ -222,3 +225,37 @@ const timedLogger = logger.withMiddleware({
     },
 })
 ```
+
+---
+
+## JSON preset (`@leancodepl/logger/json`)
+
+Logger that writes one JSON object per line to stdout (level, timestamp, msg, optional context). Same log levels and `enabledLogLevels` option as the CLI preset.
+
+```typescript
+import { createJsonLogger, allLogLevels, LogLevel } from "@leancodepl/logger/json"
+
+const logger = createJsonLogger()
+logger.info("Request completed") // {"level":"info","timestamp":"...","msg":"Request completed"}
+
+const quiet = createJsonLogger({ enabledLogLevels: [LogLevel.Error, LogLevel.Warn] })
+const verbose = createJsonLogger({ enabledLogLevels: allLogLevels })
+```
+
+Supports `withContext` and `withMiddleware` like the base logger.
+
+---
+
+## Nest preset (`@leancodepl/logger/nest`)
+
+NestJS `LoggerService` implementation that outputs JSON (same shape as the JSON preset). Use as a drop-in logger in Nest apps.
+
+```typescript
+import { createNestJsonLogger, type LoggerService } from "@leancodepl/logger/nest"
+
+const logger: LoggerService = createNestJsonLogger()
+logger.log("Application started")
+logger.error("Something went wrong", "MyService")
+```
+
+If the last argument is a string, it is used as the `context` field in the JSON output (same behavior as Nest’s built-in logger).
