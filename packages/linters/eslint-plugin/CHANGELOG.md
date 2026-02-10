@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.7.3](https://github.com/leancodepl/js_corelibrary/compare/v9.7.2...v9.7.3) (2026-02-10)
+
+### Bug Fixes
+
+- remove tests from eslint plugin output
+  ([1166fa1](https://github.com/leancodepl/js_corelibrary/commit/1166fa126dc46fb925d5f7507b6170eb67c856cf))
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## [9.7.2](https://github.com/leancodepl/js_corelibrary/compare/v9.7.1...v9.7.2) (2026-01-20)
 
 **Note:** Version bump only for package @leancodepl/eslint-plugin
