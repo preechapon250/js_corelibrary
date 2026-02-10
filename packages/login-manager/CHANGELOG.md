@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.7.4](https://github.com/leancodepl/js_corelibrary/compare/v9.7.3...v9.7.4) (2026-02-10)
+
+### Bug Fixes
+
+- prevent concurrent token refresh causing logout in multiple tabs
+  ([e92e515](https://github.com/leancodepl/js_corelibrary/commit/e92e5156aacc7c68604780a09c0c0f2c35595de2))
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## [9.7.3](https://github.com/leancodepl/js_corelibrary/compare/v9.7.2...v9.7.3) (2026-02-10)
 
 ### Bug Fixes

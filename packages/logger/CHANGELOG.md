@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.7.4](https://github.com/leancodepl/js_corelibrary/compare/v9.7.3...v9.7.4) (2026-02-10)
+
+### Bug Fixes
+
+- logger message key
+  ([acf7415](https://github.com/leancodepl/js_corelibrary/commit/acf74155e6312cf7374ba936cdcc57fc81dc68e3))
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## [9.7.3](https://github.com/leancodepl/js_corelibrary/compare/v9.7.2...v9.7.3) (2026-02-10)
 
 ### Bug Fixes
