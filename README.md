@@ -120,6 +120,22 @@ Type-safe Google Tag Manager data layer integration for web analytics and event 
 
 Cookie consent helper integrating `vanilla-cookieconsent` with Google Consent Mode.
 
+### Logging
+
+#### `@leancodepl/logger`
+
+Structured logger with middleware support and contextual messages. Use the base package for custom log handlers, or pick
+a preset:
+
+- **`@leancodepl/logger`** – Core API: `createLogger`, `withContext`, `withMiddleware`, contextual message functions.
+  All listed below can be also imported from the base package.
+- **`@leancodepl/logger/cli`** – Colored console logger for CLI apps: `createCliLogger` with configurable log levels
+  (error, warn, success, info, verbose, debug).
+- **`@leancodepl/logger/json`** – JSON lines to stdout: `createJsonLogger` with the same level filtering as the CLI
+  preset.
+- **`@leancodepl/logger/nest`** – NestJS `LoggerService` adapter: `createNestJsonLogger()` for drop-in use in Nest apps
+  with JSON output.
+
 ### Utilities
 
 #### `@leancodepl/utils`
