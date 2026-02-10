@@ -69,4 +69,6 @@ function createJsonLogger({ enabledLogLevels = defaultEnabledLogLevels }: Create
   })
 }
 
-export { createJsonLogger }
+type JsonLogger = ReturnType<typeof createJsonLogger>
+
+export { createJsonLogger, type JsonLogger }
