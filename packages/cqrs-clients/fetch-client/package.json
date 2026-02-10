@@ -1,6 +1,6 @@
 {
   "name": "@leancodepl/fetch-client",
-  "version": "9.7.3",
+  "version": "9.7.4",
   "license": "Apache-2.0",
   "type": "module",
   "main": "./dist/index.js",
@@ -15,9 +15,9 @@
     }
   },
   "dependencies": {
-    "@leancodepl/cqrs-client-base": "9.7.3",
-    "@leancodepl/utils": "9.7.3",
-    "@leancodepl/validation": "9.7.3",
+    "@leancodepl/cqrs-client-base": "9.7.4",
+    "@leancodepl/utils": "9.7.4",
+    "@leancodepl/validation": "9.7.4",
     "tslib": "^2.3.0"
   },
   "publishConfig": {

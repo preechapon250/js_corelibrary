@@ -1,6 +1,6 @@
 {
   "name": "@leancodepl/eslint-plugin",
-  "version": "9.7.3",
+  "version": "9.7.4",
   "license": "Apache-2.0",
   "type": "module",
   "main": "src/index.js",
