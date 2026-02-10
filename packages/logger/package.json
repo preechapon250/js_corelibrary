@@ -17,6 +17,16 @@
       "types": "./dist/cli.d.ts",
       "import": "./dist/cli.js",
       "default": "./dist/cli.js"
+    },
+    "./json": {
+      "types": "./dist/json.d.ts",
+      "import": "./dist/json.js",
+      "default": "./dist/json.js"
+    },
+    "./nest": {
+      "types": "./dist/nest.d.ts",
+      "import": "./dist/nest.js",
+      "default": "./dist/nest.js"
     }
   },
   "dependencies": {

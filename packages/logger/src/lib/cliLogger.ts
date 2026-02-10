@@ -8,29 +8,14 @@ import {
   MethodHandler,
   SupportedOutput,
 } from "./logger"
-
-enum LogLevel {
-  Error = 0,
-  Warn = 1,
-  Success = 2,
-  Info = 3,
-  Verbose = 4,
-  Debug = 5,
-}
-
-const allLogLevels = [LogLevel.Error, LogLevel.Warn, LogLevel.Success, LogLevel.Info, LogLevel.Verbose, LogLevel.Debug]
-
-const defaultEnabledLogLevels = [LogLevel.Error, LogLevel.Warn, LogLevel.Success, LogLevel.Info]
-
-const logLevelToLabel = {
-  [LogLevel.Error]: "error",
-  [LogLevel.Warn]: "warn",
-  [LogLevel.Success]: "success",
-  [LogLevel.Info]: "info",
-  [LogLevel.Verbose]: "verbose",
-  [LogLevel.Debug]: "debug",
-} as const
-type LogLevelLabel = (typeof logLevelToLabel)[keyof typeof logLevelToLabel]
+import {
+  allLogLevels,
+  defaultEnabledLogLevels,
+  isLogLevelEnabled,
+  LogLevel,
+  type LogLevelLabel,
+  logLevelToLabel,
+} from "./logLevels"
 
 const logLevelToColor: Record<LogLevel, (text: string) => string> = {
   [LogLevel.Error]: chalk.red,
@@ -40,10 +25,6 @@ const logLevelToColor: Record<LogLevel, (text: string) => string> = {
   [LogLevel.Verbose]: chalk.gray,
   [LogLevel.Debug]: chalk.magenta,
 } as const
-
-function isLogLevelEnabled(logLevel: LogLevel, enabledLogLevels: LogLevel[]) {
-  return enabledLogLevels.includes(logLevel)
-}
 
 function mapMessages<TContext extends DefaultContext, TOutput extends SupportedOutput>(
   context: TContext,
@@ -116,4 +97,4 @@ function createCliLogger({ enabledLogLevels = defaultEnabledLogLevels }: CreateC
   })
 }
 
-export { allLogLevels, createCliLogger, LogLevel }
+export { createCliLogger }
