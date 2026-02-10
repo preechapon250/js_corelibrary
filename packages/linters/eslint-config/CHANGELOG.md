@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.7.3](https://github.com/leancodepl/js_corelibrary/compare/v9.7.2...v9.7.3) (2026-02-10)
+
+### Features
+
+- add eslint unicorn rules
+  ([0c821f2](https://github.com/leancodepl/js_corelibrary/commit/0c821f20f0f7e667c1616161a173e7501baa94cb))
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## [9.7.2](https://github.com/leancodepl/js_corelibrary/compare/v9.7.1...v9.7.2) (2026-01-20)
 
 **Note:** Version bump only for package @leancodepl/eslint-config

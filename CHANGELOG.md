@@ -3,6 +3,70 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.7.3](https://github.com/leancodepl/js_corelibrary/compare/v9.7.2...v9.7.3) (2026-02-10)
+
+### Bug Fixes
+
+- fix error name
+  ([fadf849](https://github.com/leancodepl/js_corelibrary/commit/fadf84983e5311c771d0bd124298a03cbf816936))
+- improve confirmation message for term removal in diff command
+  ([35576dc](https://github.com/leancodepl/js_corelibrary/commit/35576dc9d8a61983f4439d10606c906ca5b1aa17))
+- intl default config values
+  ([87d562d](https://github.com/leancodepl/js_corelibrary/commit/87d562d1fdb3e895912b6c4286fd681e2d53e21e))
+- intl lint ([28c620e](https://github.com/leancodepl/js_corelibrary/commit/28c620ec3905f6e07a8588040c9694faa50485d6))
+- lint issues ([9d4e932](https://github.com/leancodepl/js_corelibrary/commit/9d4e93254f645a915a8f7afa7d75459109e57d26))
+- logger test ([3260655](https://github.com/leancodepl/js_corelibrary/commit/3260655a6fc063e2fdf37551a8a6af046ef447bd))
+- missing logger files
+  ([20227e7](https://github.com/leancodepl/js_corelibrary/commit/20227e768660f47befad4c130566024dbff0665b))
+- nx plugins exports
+  ([21c7ded](https://github.com/leancodepl/js_corelibrary/commit/21c7ded6220c66d2d1942c9bc6dc57e53e713163))
+- package lock ([86c7a26](https://github.com/leancodepl/js_corelibrary/commit/86c7a2656c198957f88b8d6ea720a23f268e6ef9))
+- package-log ([20cfad7](https://github.com/leancodepl/js_corelibrary/commit/20cfad781b51af91187d4715e3e4d8427ed4647a))
+- remove tests from eslint plugin output
+  ([1166fa1](https://github.com/leancodepl/js_corelibrary/commit/1166fa126dc46fb925d5f7507b6170eb67c856cf))
+- use node:path
+  ([2953cdb](https://github.com/leancodepl/js_corelibrary/commit/2953cdb1f5aaa8c205de970277f35abbcfbeaa3f))
+
+### Features
+
+- add confirmation prompt for term removal in diff command
+  ([dc0f4ca](https://github.com/leancodepl/js_corelibrary/commit/dc0f4ca275043ae7cf8da05003a69095c2687835))
+- add empty logger package
+  ([97bb645](https://github.com/leancodepl/js_corelibrary/commit/97bb645d65fb3a7e44290e9b4278908e796e1170))
+- add empty logger package
+  ([3387a75](https://github.com/leancodepl/js_corelibrary/commit/3387a750d48a48d9143a69658ed90d5bcf2eeb50))
+- add eslint unicorn rules
+  ([0c821f2](https://github.com/leancodepl/js_corelibrary/commit/0c821f20f0f7e667c1616161a173e7501baa94cb))
+- add Jest setup file to mock esm only inquirer
+  ([d86a71d](https://github.com/leancodepl/js_corelibrary/commit/d86a71d2b3f159577ef89cfa597e078f6efe991f))
+- add json and nest loggers
+  ([e52d730](https://github.com/leancodepl/js_corelibrary/commit/e52d7301e72f01c8789f76682c7e465ea66f153b))
+- add loggers package with cli logger
+  ([2b0f5b4](https://github.com/leancodepl/js_corelibrary/commit/2b0f5b47674cfa61cebce77300f84e86cd8b50cc))
+- add nx plugins
+  ([57cbe45](https://github.com/leancodepl/js_corelibrary/commit/57cbe45f8a01540d3f19465e74be4e57012a639a))
+- allow unknown output in logger
+  ([d5f9107](https://github.com/leancodepl/js_corelibrary/commit/d5f91075b87a9fb41c85c1e6302f986ac8c7cfc0))
+- allow using config file for intl package
+  ([96d8c93](https://github.com/leancodepl/js_corelibrary/commit/96d8c93ab3038e720ac6747d82cab7327aade98b))
+- handle log level success
+  ([e1973b9](https://github.com/leancodepl/js_corelibrary/commit/e1973b9ee4557d16bd22a9cc11c7b5f03fb2c78d))
+- implement logger
+  ([8e86b9b](https://github.com/leancodepl/js_corelibrary/commit/8e86b9b654edde1f567ba8fc7f4e85adc32b88a6))
+- implement logger
+  ([15ef6e4](https://github.com/leancodepl/js_corelibrary/commit/15ef6e43d8b825ea646964a956f3046c47de5767))
+- replace Buffer from node to native btoa
+  ([64fd46b](https://github.com/leancodepl/js_corelibrary/commit/64fd46be3a2fd36b62c6b3d48fc8726fc334fc49))
+- term removal functionality using interactive diff
+  ([c33b404](https://github.com/leancodepl/js_corelibrary/commit/c33b404d15a7c316729addc309783f2bb8aa9799))
+- translations next to terms
+  ([6e31e86](https://github.com/leancodepl/js_corelibrary/commit/6e31e86b722172f19b458fe75ed5169046091e37))
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## [9.7.2](https://github.com/leancodepl/js_corelibrary/compare/v9.7.1...v9.7.2) (2026-01-20)
 
 **Note:** Version bump only for package core-js-library

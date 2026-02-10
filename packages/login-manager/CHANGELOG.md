@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [9.7.3](https://github.com/leancodepl/js_corelibrary/compare/v9.7.2...v9.7.3) (2026-02-10)
+
+### Bug Fixes
+
+- fix error name
+  ([fadf849](https://github.com/leancodepl/js_corelibrary/commit/fadf84983e5311c771d0bd124298a03cbf816936))
+
+### Features
+
+- replace Buffer from node to native btoa
+  ([64fd46b](https://github.com/leancodepl/js_corelibrary/commit/64fd46be3a2fd36b62c6b3d48fc8726fc334fc49))
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## [9.7.2](https://github.com/leancodepl/js_corelibrary/compare/v9.7.1...v9.7.2) (2026-01-20)
 
 **Note:** Version bump only for package @leancodepl/login-manager
