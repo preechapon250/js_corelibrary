@@ -7,6 +7,8 @@ import { dirname, join } from "node:path"
 
 const packageJsonGlob = "**/package.json"
 
+export const name = "@leancodepl/nx-plugins/publish"
+
 export const createNodesV2 = [
   packageJsonGlob,
   async (configFiles, options, context) =>
