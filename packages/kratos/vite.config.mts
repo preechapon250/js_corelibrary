@@ -22,7 +22,15 @@ export default defineConfig(() => ({
       fileName: "index",
     },
     rollupOptions: {
-      external: ["react", "react-dom", "react/jsx-runtime"],
+      external: [
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+        "@leancodepl/utils",
+        "@radix-ui/react-slot",
+        "@tanstack/react-form",
+        "@tanstack/react-query",
+      ],
     },
   },
   test: {

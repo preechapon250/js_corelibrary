@@ -23,7 +23,7 @@ export default defineConfig(() => ({
       fileName: "index",
     },
     rollupOptions: {
-      external: [],
+      external: ["@openfeature/core", "@openfeature/react-sdk", "@openfeature/web-sdk"],
     },
   },
   test: {

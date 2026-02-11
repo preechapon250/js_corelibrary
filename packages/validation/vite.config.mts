@@ -21,7 +21,7 @@ export default defineConfig(() => ({
       fileName: "index",
     },
     rollupOptions: {
-      external: [],
+      external: ["@leancodepl/cqrs-client-base"],
     },
   },
   test: {

@@ -42,14 +42,6 @@
       }
     },
     {
-      "plugin": "@nx/rollup/plugin",
-      "options": {
-        "buildTargetName": "build",
-        "buildDepsTargetName": "build-deps",
-        "watchDepsTargetName": "watch-deps"
-      }
-    },
-    {
       "plugin": "@nx/playwright/plugin",
       "options": {
         "targetName": "playwright:e2e"
