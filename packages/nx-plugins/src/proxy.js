@@ -3,6 +3,8 @@ import { dirname } from "node:path"
 
 const dockerComposeGlob = "**/dev/docker-compose.yml"
 
+export const name = "@leancodepl/nx-plugins/proxy"
+
 export const createNodesV2 = [
   dockerComposeGlob,
   async (configFiles, options, context) =>

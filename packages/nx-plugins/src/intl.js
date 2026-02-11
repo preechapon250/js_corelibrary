@@ -6,6 +6,8 @@ import { dirname } from "node:path"
 
 const intlConfigGlob = "**/intl.config.{js,cjs}"
 
+export const name = "@leancodepl/nx-plugins/intl"
+
 export const createNodesV2 = [
   intlConfigGlob,
   async (configFiles, options, context) =>

@@ -6,6 +6,8 @@ import { dirname } from "node:path"
 
 const contractsConfigGlob = "**/contractsgenerator-typescript.config.js"
 
+export const name = "@leancodepl/nx-plugins/contracts"
+
 export const createNodesV2 = [
   contractsConfigGlob,
   async (configFiles, options, context) =>
