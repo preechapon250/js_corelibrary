@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.0.0](https://github.com/leancodepl/js_corelibrary/compare/v9.7.4...v10.0.0) (2026-02-11)
+
+### Bug Fixes
+
+- exclude external packages from build output
+  ([4c2be7a](https://github.com/leancodepl/js_corelibrary/commit/4c2be7ac64eb6ed5603ba61b9aeef75a454dffb3))
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## [9.7.4](https://github.com/leancodepl/js_corelibrary/compare/v9.7.3...v9.7.4) (2026-02-10)
 
 **Note:** Version bump only for package @leancodepl/cookie-consent
