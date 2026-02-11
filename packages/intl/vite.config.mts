@@ -26,7 +26,7 @@ export default defineConfig(() => ({
       fileName: (format, entryName) => (format === "es" ? `${entryName}.js` : `${entryName}.cjs`),
     },
     rollupOptions: {
-      external: [/^node:/, /^[^./]/],
+      external: /^[^./]/,
     },
   },
   test: {

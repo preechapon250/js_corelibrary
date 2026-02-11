@@ -23,7 +23,7 @@ export default defineConfig(() => ({
       fileName: "index",
     },
     rollupOptions: {
-      external: [],
+      external: /^[^./]/,
     },
   },
   test: {

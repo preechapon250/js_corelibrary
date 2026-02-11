@@ -21,7 +21,7 @@ export default defineConfig(() => ({
       fileName: "index",
     },
     rollupOptions: {
-      external: ["vite", "favicons", "parse5", /^node:/],
+      external: /^[^./]/,
     },
   },
   test: {

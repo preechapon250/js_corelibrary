@@ -24,7 +24,7 @@ export default defineConfig(() => ({
       },
     },
     rollupOptions: {
-      external: ["@nx/devkit", "node:path", "node:fs", "node:child_process", /^node:/],
+      external: /^[^./]/,
     },
   },
   test: {
