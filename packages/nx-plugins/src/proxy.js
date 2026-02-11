@@ -1,13 +1,9 @@
-import { createNodesFromFiles, CreateNodesV2, TargetConfiguration } from "@nx/devkit"
+import { createNodesFromFiles } from "@nx/devkit"
 import { dirname } from "node:path"
 
 const dockerComposeGlob = "**/dev/docker-compose.yml"
 
-export interface ProxyPluginOptions {
-  targetName?: string
-}
-
-export const createNodesV2: CreateNodesV2<ProxyPluginOptions> = [
+export const createNodesV2 = [
   dockerComposeGlob,
   async (configFiles, options, context) =>
     createNodesFromFiles(
@@ -18,11 +14,11 @@ export const createNodesV2: CreateNodesV2<ProxyPluginOptions> = [
     ),
 ]
 
-function createNodesInternal(configFilePath: string, options: ProxyPluginOptions) {
+function createNodesInternal(configFilePath, options) {
   const dockerComposeDir = dirname(configFilePath)
   const targetName = options.targetName ?? "proxy"
 
-  const proxyTarget: TargetConfiguration = {
+  const proxyTarget = {
     executor: "nx:run-commands",
     defaultConfiguration: "up",
     options: {

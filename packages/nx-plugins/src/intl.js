@@ -1,23 +1,12 @@
 import {
-  CreateNodesContextV2,
   createNodesFromFiles,
-  CreateNodesV2,
   joinPathFragments,
-  TargetConfiguration,
 } from "@nx/devkit"
 import { dirname } from "node:path"
 
 const intlConfigGlob = "**/intl.config.{js,cjs}"
 
-export interface IntlPluginOptions {
-  localTargetName?: string
-  uploadTargetName?: string
-  downloadTargetName?: string
-  syncTargetName?: string
-  diffTargetName?: string
-}
-
-export const createNodesV2: CreateNodesV2<IntlPluginOptions> = [
+export const createNodesV2 = [
   intlConfigGlob,
   async (configFiles, options, context) =>
     createNodesFromFiles(
@@ -28,7 +17,7 @@ export const createNodesV2: CreateNodesV2<IntlPluginOptions> = [
     ),
 ]
 
-function createNodesInternal(configFilePath: string, options: IntlPluginOptions, _context: CreateNodesContextV2) {
+function createNodesInternal(configFilePath, options, _context) {
   const projectRoot = dirname(configFilePath)
 
   const localTargetName = options.localTargetName ?? "intl"
@@ -41,27 +30,27 @@ function createNodesInternal(configFilePath: string, options: IntlPluginOptions,
     cwd: joinPathFragments("{projectRoot}"),
   }
 
-  const localTarget: TargetConfiguration = {
+  const localTarget = {
     command: "npx @leancodepl/intl local",
     options: baseOptions,
   }
 
-  const uploadTarget: TargetConfiguration = {
+  const uploadTarget = {
     command: "npx @leancodepl/intl upload",
     options: baseOptions,
   }
 
-  const downloadTarget: TargetConfiguration = {
+  const downloadTarget = {
     command: "npx @leancodepl/intl download",
     options: baseOptions,
   }
 
-  const syncTarget: TargetConfiguration = {
+  const syncTarget = {
     command: "npx @leancodepl/intl sync",
     options: baseOptions,
   }
 
-  const diffTarget: TargetConfiguration = {
+  const diffTarget = {
     command: "npx @leancodepl/intl diff",
     options: baseOptions,
   }

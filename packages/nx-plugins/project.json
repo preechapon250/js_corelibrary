@@ -1,0 +1,20 @@
+{
+  "name": "@leancodepl/nx-plugins",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/nx-plugins/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "command": "node tools/scripts/copy.mjs packages/nx-plugins {args.outputPath}",
+      "configurations": {
+        "args": {
+          "outputPath": "{options.outputPath}"
+        }
+      },
+      "options": {
+        "outputPath": "dist/packages/nx-plugins"
+      }
+    }
+  }
+}

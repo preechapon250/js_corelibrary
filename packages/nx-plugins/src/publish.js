@@ -1,21 +1,13 @@
 import {
-  CreateNodesContextV2,
   createNodesFromFiles,
-  CreateNodesV2,
   joinPathFragments,
-  TargetConfiguration,
 } from "@nx/devkit"
 import { readFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 
 const packageJsonGlob = "**/package.json"
 
-export interface PublishPluginOptions {
-  targetName?: string
-  publishScriptPath?: string
-}
-
-export const createNodesV2: CreateNodesV2<PublishPluginOptions> = [
+export const createNodesV2 = [
   packageJsonGlob,
   async (configFiles, options, context) =>
     createNodesFromFiles(
@@ -26,15 +18,11 @@ export const createNodesV2: CreateNodesV2<PublishPluginOptions> = [
     ),
 ]
 
-function createNodesInternal(
-  packageJsonPath: string,
-  options: PublishPluginOptions,
-  context: CreateNodesContextV2,
-) {
+function createNodesInternal(packageJsonPath, options, context) {
   const projectRoot = dirname(packageJsonPath)
   const packageJsonFullPath = join(context.workspaceRoot, packageJsonPath)
 
-  let pkg: { name?: string; files?: unknown }
+  let pkg
   try {
     pkg = JSON.parse(readFileSync(packageJsonFullPath, "utf-8"))
   } catch {
@@ -53,7 +41,7 @@ function createNodesInternal(
   const targetName = options.targetName ?? "publish"
   const publishScriptPath = options.publishScriptPath ?? "tools/scripts/publish.mjs"
 
-  const publishTarget: TargetConfiguration = {
+  const publishTarget = {
     command: `node ${publishScriptPath} ${packageName} {args.registry} {args.ver} {args.tag}`,
     options: {
       cwd: joinPathFragments("{workspaceRoot}"),

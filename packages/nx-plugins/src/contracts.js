@@ -1,19 +1,12 @@
 import {
-  CreateNodesContextV2,
   createNodesFromFiles,
-  CreateNodesV2,
   joinPathFragments,
-  TargetConfiguration,
 } from "@nx/devkit"
 import { dirname } from "node:path"
 
 const contractsConfigGlob = "**/contractsgenerator-typescript.config.js"
 
-export interface ContractsPluginOptions {
-  targetName?: string
-}
-
-export const createNodesV2: CreateNodesV2<ContractsPluginOptions> = [
+export const createNodesV2 = [
   contractsConfigGlob,
   async (configFiles, options, context) =>
     createNodesFromFiles(
@@ -24,11 +17,11 @@ export const createNodesV2: CreateNodesV2<ContractsPluginOptions> = [
     ),
 ]
 
-function createNodesInternal(configFilePath: string, options: ContractsPluginOptions, _context: CreateNodesContextV2) {
+function createNodesInternal(configFilePath, options, _context) {
   const projectRoot = dirname(configFilePath)
   const targetName = options.targetName ?? "contracts"
 
-  const contractsTarget: TargetConfiguration = {
+  const contractsTarget = {
     command: "npx @leancodepl/contractsgenerator-typescript --no-install",
     options: {
       cwd: joinPathFragments("{projectRoot}"),

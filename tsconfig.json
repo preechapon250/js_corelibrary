@@ -101,9 +101,6 @@
     },
     {
       "path": "./packages/logger"
-    },
-    {
-      "path": "./packages/nx-plugins"
     }
   ]
 }
