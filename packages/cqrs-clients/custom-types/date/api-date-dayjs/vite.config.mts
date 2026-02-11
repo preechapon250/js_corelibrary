@@ -21,7 +21,7 @@ export default defineConfig(() => ({
       fileName: "index",
     },
     rollupOptions: {
-      external: /^[^./]/,
+      external: ["@leancodepl/api-date", "@leancodepl/api-date-utils", "dayjs"],
     },
   },
   test: {

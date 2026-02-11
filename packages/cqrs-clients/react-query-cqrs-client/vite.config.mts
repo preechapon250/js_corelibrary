@@ -22,7 +22,7 @@ export default defineConfig(() => ({
       fileName: "index",
     },
     rollupOptions: {
-      external: /^[^./]/,
+      external: ["react", "react-dom", "react/jsx-runtime", "@leancodepl/cqrs-client-base", "@leancodepl/utils", "@leancodepl/validation", "@tanstack/react-query", "rxjs"],
     },
   },
   test: {

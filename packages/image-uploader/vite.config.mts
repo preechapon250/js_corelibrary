@@ -22,7 +22,7 @@ export default defineConfig(() => ({
       fileName: "index",
     },
     rollupOptions: {
-      external: /^[^./]/,
+      external: ["react", "react-dom", "react/jsx-runtime", "@leancodepl/utils", "react-dropzone", "react-easy-crop", "uuid"],
     },
   },
   test: {
