@@ -213,7 +213,7 @@ export type FlowsConfig<
  * @param basePath - Base URL for the Kratos API server
  * @param traits - Optional traits configuration object for user schema validation
  * @param SessionManager - Optional session manager constructor, defaults to {@link BaseSessionManager}
- * @param oidcProviders - Optional array of custom OIDC provider configurations. Each provider should have an `id` (matching Kratos provider ID) and optional `label`. Define as `as const` for type safety.
+ * @param oidcProviders - Optional array of custom OIDC provider configurations. Each provider should have an `id` (matching Kratos provider ID). Define as `as const` for type safety.
  * @returns Object containing authentication flows, React providers, and session manager
  * @example
  * ```tsx

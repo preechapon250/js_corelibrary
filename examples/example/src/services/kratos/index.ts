@@ -5,9 +5,9 @@ import { SessionManager } from "./session"
 import { traitsConfig } from "./traits"
 
 const oidcProviders = [
-  { id: "google", label: "Google" },
-  { id: "apple", label: "Apple" },
-  { id: "facebook", label: "Facebook" },
+  { id: "google" },
+  { id: "apple" },
+  { id: "facebook" },
 ] as const
 
 const { session, providers, flows } = mkKratos({

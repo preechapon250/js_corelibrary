@@ -2,7 +2,6 @@ import { ComponentType, ReactNode } from "react"
 
 export type OidcProviderConfig = {
   id: string
-  label?: string
 }
 
 export type OidcProvidersConfig = readonly OidcProviderConfig[]

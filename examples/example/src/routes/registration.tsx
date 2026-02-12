@@ -61,7 +61,7 @@ function RouteComponent() {
 
 function TraitsForm({
   errors,
-  oidcProviders,
+  oidcProviders: { Google, Apple, Facebook },
   traitFields: { Email, GivenName, RegulationsAccepted, Submit },
   isSubmitting,
   isValidating,
@@ -99,30 +99,30 @@ function TraitsForm({
         </button>
       </Submit>
 
-      {oidcProviders.Google && (
-        <oidcProviders.Google>
+      {Google && (
+        <Google>
           <button data-testid={dataTestIds.registration.traitsForm.googleButton} disabled={isSubmitting || isValidating}>
             Sign up with Google
           </button>
-        </oidcProviders.Google>
+        </Google>
       )}
 
-      {oidcProviders.Apple && (
-        <oidcProviders.Apple>
+      {Apple && (
+        <Apple>
           <button data-testid={dataTestIds.registration.traitsForm.appleButton} disabled={isSubmitting || isValidating}>
             Sign up with Apple
           </button>
-        </oidcProviders.Apple>
+        </Apple>
       )}
 
-      {oidcProviders.Facebook && (
-        <oidcProviders.Facebook>
+      {Facebook && (
+        <Facebook>
           <button
             data-testid={dataTestIds.registration.traitsForm.facebookButton}
             disabled={isSubmitting || isValidating}>
             Sign up with Facebook
           </button>
-        </oidcProviders.Facebook>
+        </Facebook>
       )}
 
       {errors && errors.length > 0 && (

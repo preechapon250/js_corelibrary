@@ -24,7 +24,7 @@ Creates a Kratos client factory with authentication flows, session management, a
 - `SessionManager?: new (props: BaseSessionManagerContructorProps) => TSessionManager` - Optional session manager
   constructor, defaults to BaseSessionManager
 - `oidcProviders?: readonly OidcProviderConfig[]` - Optional array of custom OIDC provider configurations. Each provider
-  should have an `id` (matching Kratos provider ID) and optional `label`
+  should have an `id` (matching Kratos provider ID)
 
 **Returns:** Object with the following structure:
 
@@ -224,9 +224,9 @@ const {
   basePath: environment.authUrl,
   traits: traitsConfig,
   oidcProviders: [
-    { id: "microsoft", label: "Microsoft" },
-    { id: "github", label: "GitHub" },
-    { id: "reddit", label: "Reddit" },
+    { id: "microsoft" },
+    { id: "github" },
+    { id: "reddit" },
   ],
 })
 ```
@@ -239,9 +239,9 @@ With TypeScript, the library generates type-safe provider types from your config
 // kratosService.ts
 
 const oidcProvidersConfig = [
-  { id: "microsoft", label: "Microsoft" },
-  { id: "github", label: "GitHub" },
-  { id: "reddit", label: "Reddit" },
+  { id: "microsoft" },
+  { id: "github" },
+  { id: "reddit" },
 ] as const
 
 const {
