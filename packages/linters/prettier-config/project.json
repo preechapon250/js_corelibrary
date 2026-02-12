@@ -15,10 +15,6 @@
       "options": {
         "outputPath": "dist/packages/linters/prettier-config"
       }
-    },
-    "publish": {
-      "command": "node tools/scripts/publish.mjs @leancodepl/prettier-config {args.registry} {args.ver} {args.tag}",
-      "dependsOn": ["build"]
     }
   }
 }

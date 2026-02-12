@@ -11,10 +11,6 @@
         "command": "npx ts-node src/poeditor/generatePoeditorClient.ts",
         "cwd": "packages/intl"
       }
-    },
-    "publish": {
-      "command": "node tools/scripts/publish.mjs @leancodepl/intl {args.registry} {args.ver} {args.tag}",
-      "dependsOn": ["build"]
     }
   }
 }

@@ -1,23 +1,24 @@
 import {
-  CreateNodesContextV2,
   createNodesFromFiles,
-  CreateNodesV2,
   joinPathFragments,
-  TargetConfiguration,
 } from "@nx/devkit"
 import { dirname } from "node:path"
 
+/**
+ * @typedef {object} IntlPluginOptions
+ * @property {string} [localTargetName]
+ * @property {string} [uploadTargetName]
+ * @property {string} [downloadTargetName]
+ * @property {string} [syncTargetName]
+ * @property {string} [diffTargetName]
+ */
+
 const intlConfigGlob = "**/intl.config.{js,cjs}"
 
-export interface IntlPluginOptions {
-  localTargetName?: string
-  uploadTargetName?: string
-  downloadTargetName?: string
-  syncTargetName?: string
-  diffTargetName?: string
-}
+export const name = "@leancodepl/nx-plugins/intl"
 
-export const createNodesV2: CreateNodesV2<IntlPluginOptions> = [
+/** @type {import("@nx/devkit").CreateNodesV2<IntlPluginOptions>} */
+export const createNodesV2 = [
   intlConfigGlob,
   async (configFiles, options, context) =>
     createNodesFromFiles(
@@ -28,7 +29,12 @@ export const createNodesV2: CreateNodesV2<IntlPluginOptions> = [
     ),
 ]
 
-function createNodesInternal(configFilePath: string, options: IntlPluginOptions, _context: CreateNodesContextV2) {
+/**
+ * @param {string} configFilePath
+ * @param {IntlPluginOptions} options
+ * @param {import("@nx/devkit").CreateNodesContextV2} _context
+ */
+function createNodesInternal(configFilePath, options, _context) {
   const projectRoot = dirname(configFilePath)
 
   const localTargetName = options.localTargetName ?? "intl"
@@ -41,27 +47,32 @@ function createNodesInternal(configFilePath: string, options: IntlPluginOptions,
     cwd: joinPathFragments("{projectRoot}"),
   }
 
-  const localTarget: TargetConfiguration = {
+  /** @type {import("@nx/devkit").TargetConfiguration} */
+  const localTarget = {
     command: "npx @leancodepl/intl local",
     options: baseOptions,
   }
 
-  const uploadTarget: TargetConfiguration = {
+  /** @type {import("@nx/devkit").TargetConfiguration} */
+  const uploadTarget = {
     command: "npx @leancodepl/intl upload",
     options: baseOptions,
   }
 
-  const downloadTarget: TargetConfiguration = {
+  /** @type {import("@nx/devkit").TargetConfiguration} */
+  const downloadTarget = {
     command: "npx @leancodepl/intl download",
     options: baseOptions,
   }
 
-  const syncTarget: TargetConfiguration = {
+  /** @type {import("@nx/devkit").TargetConfiguration} */
+  const syncTarget = {
     command: "npx @leancodepl/intl sync",
     options: baseOptions,
   }
 
-  const diffTarget: TargetConfiguration = {
+  /** @type {import("@nx/devkit").TargetConfiguration} */
+  const diffTarget = {
     command: "npx @leancodepl/intl diff",
     options: baseOptions,
   }

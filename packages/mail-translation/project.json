@@ -11,10 +11,6 @@
         "command": "npx ts-node packages/mail-translation/src/generateConfigSchema.ts",
         "cwd": "{workspaceRoot}"
       }
-    },
-    "publish": {
-      "command": "node tools/scripts/publish.mjs @leancodepl/mail-translation {args.registry} {args.ver} {args.tag}",
-      "dependsOn": ["build"]
     }
   }
 }

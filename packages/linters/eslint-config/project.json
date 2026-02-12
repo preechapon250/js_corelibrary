@@ -15,10 +15,6 @@
       "options": {
         "outputPath": "dist/packages/linters/eslint-config"
       }
-    },
-    "publish": {
-      "command": "node tools/scripts/publish.mjs @leancodepl/eslint-config {args.registry} {args.ver} {args.tag}",
-      "dependsOn": ["build"]
     }
   }
 }

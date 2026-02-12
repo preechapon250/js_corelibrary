@@ -15,10 +15,6 @@
       "options": {
         "outputPath": "dist/packages/linters/stylelint-config"
       }
-    },
-    "publish": {
-      "command": "node tools/scripts/publish.mjs @leancodepl/stylelint-config {args.registry} {args.ver} {args.tag}",
-      "dependsOn": ["build"]
     }
   }
 }
