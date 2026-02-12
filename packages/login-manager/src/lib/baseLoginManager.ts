@@ -114,6 +114,14 @@ export abstract class BaseLoginManager<TStorage extends TokenStorage> {
         return await this.waitForLockRelease()
       }
 
+      if (token === null) {
+        return false
+      }
+
+      if (token.expirationDate >= new Date()) {
+        return true
+      }
+
       try {
         const result = await this.acquireToken(this.buildRefreshRequest(token))
         return result.type === "success"
@@ -124,7 +132,7 @@ export abstract class BaseLoginManager<TStorage extends TokenStorage> {
   }
 
   private async waitForLockRelease(): Promise<boolean> {
-    return await navigator.locks.request(refreshLockKey, async () => {
+    return await navigator.locks.request(refreshLockKey, { mode: "shared" }, async () => {
       const currentToken = await this.storage.getToken()
       return currentToken !== null
     })
