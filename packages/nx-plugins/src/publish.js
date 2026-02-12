@@ -5,10 +5,17 @@ import {
 import { readFileSync } from "node:fs"
 import { dirname, join } from "node:path"
 
+/**
+ * @typedef {object} PublishPluginOptions
+ * @property {string} [targetName]
+ * @property {string} [publishScriptPath]
+ */
+
 const packageJsonGlob = "**/package.json"
 
 export const name = "@leancodepl/nx-plugins/publish"
 
+/** @type {import("@nx/devkit").CreateNodesV2<PublishPluginOptions>} */
 export const createNodesV2 = [
   packageJsonGlob,
   async (configFiles, options, context) =>
@@ -20,6 +27,11 @@ export const createNodesV2 = [
     ),
 ]
 
+/**
+ * @param {string} packageJsonPath
+ * @param {PublishPluginOptions} options
+ * @param {import("@nx/devkit").CreateNodesContextV2} context
+ */
 function createNodesInternal(packageJsonPath, options, context) {
   const projectRoot = dirname(packageJsonPath)
   const packageJsonFullPath = join(context.workspaceRoot, packageJsonPath)
@@ -43,6 +55,7 @@ function createNodesInternal(packageJsonPath, options, context) {
   const targetName = options.targetName ?? "publish"
   const publishScriptPath = options.publishScriptPath ?? "tools/scripts/publish.mjs"
 
+  /** @type {import("@nx/devkit").TargetConfiguration} */
   const publishTarget = {
     command: `node ${publishScriptPath} ${packageName} {args.registry} {args.ver} {args.tag}`,
     options: {
