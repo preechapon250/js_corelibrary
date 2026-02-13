@@ -102,6 +102,50 @@ describe("LoginManager", () => {
       expect(globalThis.fetch).toHaveBeenCalledTimes(1)
     })
 
+    it("should not refresh again if token was already refreshed by another tab", async () => {
+      const manager1 = new SyncLoginManager(storage, "https://api.example.com", undefined, "client1", "openid")
+      const manager2 = new SyncLoginManager(storage, "https://api.example.com", undefined, "client1", "openid")
+
+      await manager1.tryRefreshToken()
+      expect(globalThis.fetch).toHaveBeenCalledTimes(1)
+
+      const result = await manager2.tryRefreshToken()
+      expect(result).toBe(true)
+      expect(globalThis.fetch).toHaveBeenCalledTimes(1)
+    })
+
+    it("should re-read token from storage inside lock to avoid using stale refresh token", async () => {
+      let fetchCallCount = 0
+      globalThis.fetch = vi.fn(() => {
+        fetchCallCount++
+        if (fetchCallCount === 1) {
+          return Promise.resolve({
+            ok: true,
+            status: 200,
+            json: () =>
+              Promise.resolve({
+                access_token: "new_access_token",
+                refresh_token: "new_refresh_token",
+                expires_in: 3600,
+              }),
+          } as Response)
+        }
+        return Promise.resolve({
+          ok: false,
+          status: 400,
+        } as Response)
+      })
+
+      const manager1 = new SyncLoginManager(storage, "https://api.example.com", undefined, "client1", "openid")
+      const manager2 = new SyncLoginManager(storage, "https://api.example.com", undefined, "client1", "openid")
+
+      await manager1.tryRefreshToken()
+
+      const result = await manager2.tryRefreshToken()
+      expect(result).toBe(true)
+      expect(globalThis.fetch).toHaveBeenCalledTimes(1)
+    })
+
     it("should handle failed refresh", async () => {
       globalThis.fetch = vi.fn(() =>
         Promise.resolve({
