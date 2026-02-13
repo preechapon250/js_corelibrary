@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.0.1](https://github.com/leancodepl/js_corelibrary/compare/v10.0.0...v10.0.1) (2026-02-13)
+
+### Bug Fixes
+
+- fix usage of stale token in login manager
+  ([d96b544](https://github.com/leancodepl/js_corelibrary/commit/d96b544f49baf20a5d70d5979df9c4322c4b7663))
+
+### Features
+
+- move publish targets to nx plugin
+  ([aa68e33](https://github.com/leancodepl/js_corelibrary/commit/aa68e33991cd9ce7af3dab3f10f1d0a8030b4d28))
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 # [10.0.0](https://github.com/leancodepl/js_corelibrary/compare/v9.7.4...v10.0.0) (2026-02-11)
 
 ### Bug Fixes
