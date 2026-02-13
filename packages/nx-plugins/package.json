@@ -1,6 +1,6 @@
 {
   "name": "@leancodepl/nx-plugins",
-  "version": "10.0.0",
+  "version": "10.0.1",
   "license": "Apache-2.0",
   "type": "module",
   "main": "src/index.js",
@@ -44,7 +44,14 @@
     "url": "https://github.com/leancodepl/js_corelibrary/issues"
   },
   "description": "Collection of Nx plugins for LeanCode projects",
-  "keywords": ["nx", "nx-plugin", "generators", "executors", "javascript", "leancode"],
+  "keywords": [
+    "nx",
+    "nx-plugin",
+    "generators",
+    "executors",
+    "javascript",
+    "leancode"
+  ],
   "author": {
     "name": "LeanCode",
     "url": "https://leancode.co"
