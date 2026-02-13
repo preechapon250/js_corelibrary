@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [10.0.2](https://github.com/leancodepl/js_corelibrary/compare/v10.0.1...v10.0.2) (2026-02-13)
+
+### Features
+
+- add logger types
+  ([fbfec80](https://github.com/leancodepl/js_corelibrary/commit/fbfec80ead38cbd4f76fa2e94fc0c90a9c57e2a9))
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## [10.0.1](https://github.com/leancodepl/js_corelibrary/compare/v10.0.0...v10.0.1) (2026-02-13)
 
 ### Features
