@@ -40,7 +40,7 @@ export interface LoggerService {
   setLogLevels?(levels: any[]): any
 }
 
-export function createNestJsonLogger(): LoggerService {
+function createNestJsonLogger(): LoggerService {
   const nestLogger = createLogger({
     log: nestJsonHandler("info"),
     error: nestJsonHandler("error"),
@@ -71,3 +71,7 @@ export function createNestJsonLogger(): LoggerService {
     },
   }
 }
+
+type NestJsonLogger = ReturnType<typeof createNestJsonLogger>
+
+export { createNestJsonLogger, type NestJsonLogger }

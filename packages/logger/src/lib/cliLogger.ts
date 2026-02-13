@@ -97,4 +97,6 @@ function createCliLogger({ enabledLogLevels = defaultEnabledLogLevels }: CreateC
   })
 }
 
-export { createCliLogger }
+type CliLogger = ReturnType<typeof createCliLogger>
+
+export { type CliLogger, createCliLogger }
