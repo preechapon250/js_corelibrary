@@ -267,26 +267,26 @@ import type { OidcProvidersConfig } from "./kratosService"
 // Note: Provider IDs are capitalized (first letter only) in the component names.
 // For example, "github" becomes "Github", "microsoft" becomes "Microsoft".
 function ChooseMethodForm(props: loginFlow.ChooseMethodFormProps<OidcProvidersConfig>) {
-  const { oidcProviders, isSubmitting, isValidating } = props
+  const { oidcProviders: { Microsoft, Github, Reddit }, isSubmitting, isValidating } = props
 
   return (
     <div>
-      {oidcProviders.Microsoft && (
-        <oidcProviders.Microsoft>
+      {Microsoft && (
+        <Microsoft>
           <button disabled={isSubmitting || isValidating}>Sign in with Microsoft</button>
-        </oidcProviders.Microsoft>
+        </Microsoft>
       )}
 
-      {oidcProviders.Github && (
-        <oidcProviders.Github>
+      {Github && (
+        <Github>
           <button disabled={isSubmitting || isValidating}>Sign in with GitHub</button>
-        </oidcProviders.Github>
+        </Github>
       )}
 
-      {oidcProviders.Reddit && (
-        <oidcProviders.Reddit>
+      {Reddit && (
+        <Reddit>
           <button disabled={isSubmitting || isValidating}>Sign in with Reddit</button>
-        </oidcProviders.Reddit>
+        </Reddit>
       )}
     </div>
   )
@@ -529,6 +529,7 @@ export const Input = ({ errors, ...props }: InputProps) => (
 import { loginFlow } from "@leancodepl/kratos"
 import { LoginFlow, getErrorMessage } from "./kratosService"
 import type { AuthTraitsConfig } from "./traits"
+import type { OidcProvidersConfig } from "./kratosService"
 
 function LoginPage() {
   return (
@@ -539,11 +540,11 @@ function LoginPage() {
   )
 }
 
-function ChooseMethodForm(props: loginFlow.ChooseMethodFormProps) {
-  const { errors, isSubmitting, isValidating } = props
+function ChooseMethodForm(props: loginFlow.ChooseMethodFormProps<OidcProvidersConfig>) {
+  const { errors, isSubmitting, isValidating, oidcProviders: { Google, Apple, Facebook } } = props
 
   if (props.isRefresh) {
-    const { passwordFields, Google, Passkey, Apple, Facebook, identifier } = props
+    const { passwordFields, Passkey, identifier } = props
 
     return (
       <div>
@@ -602,10 +603,7 @@ function ChooseMethodForm(props: loginFlow.ChooseMethodFormProps) {
 
   const {
     passwordFields: { Identifier, Password, Submit },
-    Google,
     Passkey,
-    Apple,
-    Facebook,
   } = props
 
   return (
@@ -622,17 +620,23 @@ function ChooseMethodForm(props: loginFlow.ChooseMethodFormProps) {
         <button>Login</button>
       </Submit>
 
-      <Google>
-        <button>Sign in with Google</button>
-      </Google>
+      {Google && (
+        <Google>
+          <button>Sign in with Google</button>
+        </Google>
+      )}
 
-      <Apple>
-        <button>Sign in with Apple</button>
-      </Apple>
+      {Apple && (
+        <Apple>
+          <button>Sign in with Apple</button>
+        </Apple>
+      )}
 
-      <Facebook>
-        <button>Sign in with Facebook</button>
-      </Facebook>
+      {Facebook && (
+        <Facebook>
+          <button>Sign in with Facebook</button>
+        </Facebook>
+      )}
 
       <Passkey>
         <button>Sign in with Passkey</button>
@@ -655,7 +659,7 @@ function ChooseMethodForm(props: loginFlow.ChooseMethodFormProps) {
 ```tsx
 import { registrationFlow } from "@leancodepl/kratos"
 import { RegistrationFlow, getErrorMessage } from "./kratosService"
-import type { AuthTraitsConfig } from "./traits"
+import type { AuthTraitsConfig, OidcProvidersConfig } from "./kratosService"
 
 function RegisterPage() {
   return (
@@ -669,36 +673,30 @@ function RegisterPage() {
 
 function TraitsForm({
   errors,
-  Email,
-  RegulationsAccepted,
-  GivenName,
-  Google,
-  Apple,
-  Facebook,
+  oidcProviders: { Google, Apple, Facebook },
+  traitFields: { Email, GivenName, RegulationsAccepted, Submit },
   isSubmitting,
   isValidating,
-}: registrationFlow.TraitsFormProps<AuthTraitsConfig>) {
+}: registrationFlow.TraitsFormProps<AuthTraitsConfig, OidcProvidersConfig>) {
   return (
     <div>
-      {Email && (
-        <Email>
-          <input placeholder="Email" />
-        </Email>
-      )}
-      {GivenName && (
-        <GivenName>
-          <input placeholder="First name" />
-        </GivenName>
-      )}
-      {RegulationsAccepted && (
-        <RegulationsAccepted>
-          <input placeholder="Regulations accepted" type="checkbox">
-            I accept the regulations
-          </input>
-        </RegulationsAccepted>
-      )}
+      <Email>
+        <input placeholder="Email" />
+      </Email>
 
-      <button type="submit">Register</button>
+      <GivenName>
+        <input placeholder="First name" />
+      </GivenName>
+
+      <RegulationsAccepted>
+        <input placeholder="Regulations accepted" type="checkbox">
+          I accept the regulations
+        </input>
+      </RegulationsAccepted>
+
+      <Submit>
+        <button>Register</button>
+      </Submit>
 
       {Google && (
         <Google>
