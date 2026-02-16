@@ -84,13 +84,13 @@ export function TraitsFormWrapper<
     availableProviders.forEach(node => {
       const providerId = node.attributes.value
 
-      if (isOidcProviderInConfig(oidcProvidersConfig, providerId)) {
-        const providerName = toUpperFirst(providerId)
+      if (!isOidcProviderInConfig(oidcProvidersConfig, providerId)) return
 
-        components[providerName] = ({ children }: { children: ReactNode }) => (
-          <Oidc provider={providerId}>{children}</Oidc>
-        )
-      }
+      const providerName = toUpperFirst(providerId)
+
+      components[providerName] = ({ children }: { children: ReactNode }) => (
+        <Oidc provider={providerId}>{children}</Oidc>
+      )
     })
 
     return components

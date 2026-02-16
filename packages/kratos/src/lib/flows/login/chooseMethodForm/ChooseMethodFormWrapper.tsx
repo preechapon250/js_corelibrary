@@ -20,7 +20,7 @@ type ChooseMethodFormPropsLoadedBase<TOidcProvidersConfig extends OidcProvidersC
   errors: AuthError[]
   isSubmitting: boolean
   isValidating: boolean
-  Passkey: ComponentType<{ children: ReactNode }>
+  Passkey: ComponentType<{ children: ReactNode }> | undefined
   oidcProviders: OidcProviderComponents<TOidcProvidersConfig>
 }
 
@@ -82,13 +82,13 @@ export function ChooseMethodFormWrapper<TOidcProvidersConfig extends OidcProvide
     availableProviders.forEach(node => {
       const providerId = node.attributes.value
 
-      if (isOidcProviderInConfig(oidcProvidersConfig, providerId)) {
-        const providerName = toUpperFirst(providerId)
+      if (!isOidcProviderInConfig(oidcProvidersConfig, providerId)) return
 
-        components[providerName] = ({ children }: { children: ReactNode }) => (
-          <Oidc provider={providerId}>{children}</Oidc>
-        )
-      }
+      const providerName = toUpperFirst(providerId)
+
+      components[providerName] = ({ children }: { children: ReactNode }) => (
+        <Oidc provider={providerId}>{children}</Oidc>
+      )
     })
 
     return components
@@ -111,7 +111,7 @@ export function ChooseMethodFormWrapper<TOidcProvidersConfig extends OidcProvide
             isSubmitting={passwordForm.state.isSubmitting}
             isValidating={passwordForm.state.isValidating}
             oidcProviders={oidcProviderComponents}
-            Passkey={getNodeById(loginFlow.ui.nodes, "passkey_login") ? PasskeyWithFormErrorHandler : () => null}
+            Passkey={getNodeById(loginFlow.ui.nodes, "passkey_login") && PasskeyWithFormErrorHandler}
             passwordFields={
               getNodeById(loginFlow.ui.nodes, "password")
                 ? {
