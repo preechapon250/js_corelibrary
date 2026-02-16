@@ -4,11 +4,18 @@ import { queryClient } from "../query"
 import { SessionManager } from "./session"
 import { traitsConfig } from "./traits"
 
+const oidcProviders = [
+  { id: "google" },
+  { id: "apple" },
+  { id: "facebook" },
+] as const
+
 const { session, providers, flows } = mkKratos({
   queryClient,
   basePath: environment.authUrl,
   traits: traitsConfig,
   SessionManager,
+  oidcProviders,
 })
 
 // session
@@ -30,3 +37,6 @@ export { getErrorMessage } from "./errors"
 
 // traits
 export type { AuthTraitsConfig } from "./traits"
+
+// oidc providers
+export type OidcProvidersConfig = typeof oidcProviders

@@ -2,7 +2,7 @@ import { dataTestIds } from "@example/e2e-ids"
 import { createFileRoute } from "@tanstack/react-router"
 import { z } from "zod"
 import { registrationFlow, verificationFlow } from "@leancodepl/kratos"
-import type { AuthTraitsConfig } from "../services/kratos"
+import type { AuthTraitsConfig, OidcProvidersConfig } from "../services/kratos"
 import { Checkbox } from "../components/Checkbox"
 import { Input } from "../components/Input"
 import { useRemoveFlowFromUrl } from "../hooks/useRemoveFlowFromUrl"
@@ -61,13 +61,11 @@ function RouteComponent() {
 
 function TraitsForm({
   errors,
-  Google,
-  Apple,
-  Facebook,
+  oidcProviders: { Google, Apple, Facebook },
   traitFields: { Email, GivenName, RegulationsAccepted, Submit },
   isSubmitting,
   isValidating,
-}: registrationFlow.TraitsFormProps<AuthTraitsConfig>) {
+}: registrationFlow.TraitsFormProps<AuthTraitsConfig, OidcProvidersConfig>) {
   return (
     <div data-testid={dataTestIds.registration.traitsForm.wrapper}>
       <Email>
@@ -101,25 +99,31 @@ function TraitsForm({
         </button>
       </Submit>
 
-      <Google>
-        <button data-testid={dataTestIds.registration.traitsForm.googleButton} disabled={isSubmitting || isValidating}>
-          Sign up with Google
-        </button>
-      </Google>
+      {Google && (
+        <Google>
+          <button data-testid={dataTestIds.registration.traitsForm.googleButton} disabled={isSubmitting || isValidating}>
+            Sign up with Google
+          </button>
+        </Google>
+      )}
 
-      <Apple>
-        <button data-testid={dataTestIds.registration.traitsForm.appleButton} disabled={isSubmitting || isValidating}>
-          Sign up with Apple
-        </button>
-      </Apple>
+      {Apple && (
+        <Apple>
+          <button data-testid={dataTestIds.registration.traitsForm.appleButton} disabled={isSubmitting || isValidating}>
+            Sign up with Apple
+          </button>
+        </Apple>
+      )}
 
-      <Facebook>
-        <button
-          data-testid={dataTestIds.registration.traitsForm.facebookButton}
-          disabled={isSubmitting || isValidating}>
-          Sign up with Facebook
-        </button>
-      </Facebook>
+      {Facebook && (
+        <Facebook>
+          <button
+            data-testid={dataTestIds.registration.traitsForm.facebookButton}
+            disabled={isSubmitting || isValidating}>
+            Sign up with Facebook
+          </button>
+        </Facebook>
+      )}
 
       {errors && errors.length > 0 && (
         <div data-testid={dataTestIds.common.errors}>

@@ -12,7 +12,7 @@ yarn add @leancodepl/kratos
 
 ## API
 
-### `mkKratos(queryClient, basePath, traits, SessionManager)`
+### `mkKratos(queryClient, basePath, traits, SessionManager, oidcProviders)`
 
 Creates a Kratos client factory with authentication flows, session management, and React providers.
 
@@ -23,6 +23,8 @@ Creates a Kratos client factory with authentication flows, session management, a
 - `traits?: TTraitsConfig` - Optional traits configuration object for user schema validation
 - `SessionManager?: new (props: BaseSessionManagerContructorProps) => TSessionManager` - Optional session manager
   constructor, defaults to BaseSessionManager
+- `oidcProviders?: readonly OidcProviderConfig[]` - Optional array of custom OIDC provider configurations. Each provider
+  should have an `id` (matching Kratos provider ID)
 
 **Returns:** Object with the following structure:
 
@@ -200,6 +202,98 @@ const {
   SessionManager,
 })
 ```
+
+### Custom OIDC Providers
+
+You can configure custom OIDC providers (like Microsoft, GitHub, etc.) in addition to the default providers (Apple, Google, Facebook):
+
+```typescript
+// kratosService.ts
+
+import { mkKratos } from "@leancodepl/kratos"
+import { environment } from "./environments"
+import { queryClient } from "./queryService"
+import { traitsConfig } from "./traits"
+
+const {
+  session: { sessionManager },
+  providers: { KratosProviders },
+  flows: { LoginFlow, RegistrationFlow, SettingsFlow },
+} = mkKratos({
+  queryClient,
+  basePath: environment.authUrl,
+  traits: traitsConfig,
+  oidcProviders: [
+    { id: "microsoft" },
+    { id: "github" },
+    { id: "reddit" },
+  ],
+})
+```
+
+The OIDC providers are automatically made available in the flow forms as capitalized component properties. For example, a provider with `id: "microsoft"` will be available as `oidcProviders.Microsoft`.
+
+With TypeScript, the library generates type-safe provider types from your configuration, ensuring you can only access providers you've configured:
+
+```tsx
+// kratosService.ts
+
+const oidcProvidersConfig = [
+  { id: "microsoft" },
+  { id: "github" },
+  { id: "reddit" },
+] as const
+
+const {
+  session: { sessionManager },
+  providers: { KratosProviders },
+  flows: { LoginFlow, RegistrationFlow, SettingsFlow },
+} = mkKratos({
+  queryClient,
+  basePath: environment.authUrl,
+  traits: traitsConfig,
+  oidcProviders: oidcProvidersConfig,
+})
+
+export type OidcProvidersConfig = typeof oidcProvidersConfig
+```
+
+```tsx
+// loginPage.tsx
+
+import { loginFlow } from "@leancodepl/kratos"
+import type { OidcProvidersConfig } from "./kratosService"
+
+// Note: Provider IDs are capitalized (first letter only) in the component names.
+// For example, "github" becomes "Github", "microsoft" becomes "Microsoft".
+function ChooseMethodForm(props: loginFlow.ChooseMethodFormProps<OidcProvidersConfig>) {
+  const { oidcProviders: { Microsoft, Github, Reddit }, isSubmitting, isValidating } = props
+
+  return (
+    <div>
+      {Microsoft && (
+        <Microsoft>
+          <button disabled={isSubmitting || isValidating}>Sign in with Microsoft</button>
+        </Microsoft>
+      )}
+
+      {Github && (
+        <Github>
+          <button disabled={isSubmitting || isValidating}>Sign in with GitHub</button>
+        </Github>
+      )}
+
+      {Reddit && (
+        <Reddit>
+          <button disabled={isSubmitting || isValidating}>Sign in with Reddit</button>
+        </Reddit>
+      )}
+    </div>
+  )
+}
+```
+
+The same pattern applies to registration and settings flows. Only providers configured in your Kratos instance will be available in the `oidcProviders` object, and TypeScript will provide autocomplete and type checking for the available providers.
 
 ### Session Management
 
@@ -435,6 +529,7 @@ export const Input = ({ errors, ...props }: InputProps) => (
 import { loginFlow } from "@leancodepl/kratos"
 import { LoginFlow, getErrorMessage } from "./kratosService"
 import type { AuthTraitsConfig } from "./traits"
+import type { OidcProvidersConfig } from "./kratosService"
 
 function LoginPage() {
   return (
@@ -445,11 +540,11 @@ function LoginPage() {
   )
 }
 
-function ChooseMethodForm(props: loginFlow.ChooseMethodFormProps) {
-  const { errors, isSubmitting, isValidating } = props
+function ChooseMethodForm(props: loginFlow.ChooseMethodFormProps<OidcProvidersConfig>) {
+  const { errors, isSubmitting, isValidating, oidcProviders: { Google, Apple, Facebook } } = props
 
   if (props.isRefresh) {
-    const { passwordFields, Google, Passkey, Apple, Facebook, identifier } = props
+    const { passwordFields, Passkey, identifier } = props
 
     return (
       <div>
@@ -508,10 +603,7 @@ function ChooseMethodForm(props: loginFlow.ChooseMethodFormProps) {
 
   const {
     passwordFields: { Identifier, Password, Submit },
-    Google,
     Passkey,
-    Apple,
-    Facebook,
   } = props
 
   return (
@@ -528,17 +620,23 @@ function ChooseMethodForm(props: loginFlow.ChooseMethodFormProps) {
         <button>Login</button>
       </Submit>
 
-      <Google>
-        <button>Sign in with Google</button>
-      </Google>
+      {Google && (
+        <Google>
+          <button>Sign in with Google</button>
+        </Google>
+      )}
 
-      <Apple>
-        <button>Sign in with Apple</button>
-      </Apple>
+      {Apple && (
+        <Apple>
+          <button>Sign in with Apple</button>
+        </Apple>
+      )}
 
-      <Facebook>
-        <button>Sign in with Facebook</button>
-      </Facebook>
+      {Facebook && (
+        <Facebook>
+          <button>Sign in with Facebook</button>
+        </Facebook>
+      )}
 
       <Passkey>
         <button>Sign in with Passkey</button>
@@ -561,7 +659,7 @@ function ChooseMethodForm(props: loginFlow.ChooseMethodFormProps) {
 ```tsx
 import { registrationFlow } from "@leancodepl/kratos"
 import { RegistrationFlow, getErrorMessage } from "./kratosService"
-import type { AuthTraitsConfig } from "./traits"
+import type { AuthTraitsConfig, OidcProvidersConfig } from "./kratosService"
 
 function RegisterPage() {
   return (
@@ -575,36 +673,30 @@ function RegisterPage() {
 
 function TraitsForm({
   errors,
-  Email,
-  RegulationsAccepted,
-  GivenName,
-  Google,
-  Apple,
-  Facebook,
+  oidcProviders: { Google, Apple, Facebook },
+  traitFields: { Email, GivenName, RegulationsAccepted, Submit },
   isSubmitting,
   isValidating,
-}: registrationFlow.TraitsFormProps<AuthTraitsConfig>) {
+}: registrationFlow.TraitsFormProps<AuthTraitsConfig, OidcProvidersConfig>) {
   return (
     <div>
-      {Email && (
-        <Email>
-          <input placeholder="Email" />
-        </Email>
-      )}
-      {GivenName && (
-        <GivenName>
-          <input placeholder="First name" />
-        </GivenName>
-      )}
-      {RegulationsAccepted && (
-        <RegulationsAccepted>
-          <input placeholder="Regulations accepted" type="checkbox">
-            I accept the regulations
-          </input>
-        </RegulationsAccepted>
-      )}
+      <Email>
+        <input placeholder="Email" />
+      </Email>
 
-      <button type="submit">Register</button>
+      <GivenName>
+        <input placeholder="First name" />
+      </GivenName>
+
+      <RegulationsAccepted>
+        <input placeholder="Regulations accepted" type="checkbox">
+          I accept the regulations
+        </input>
+      </RegulationsAccepted>
+
+      <Submit>
+        <button>Register</button>
+      </Submit>
 
       {Google && (
         <Google>
