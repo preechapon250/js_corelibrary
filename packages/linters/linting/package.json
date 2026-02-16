@@ -39,5 +39,9 @@
     "name": "LeanCode",
     "url": "https://leancode.co"
   },
+  "files": [
+    "src",
+    "CHANGELOG.md"
+  ],
   "sideEffects": false
 }
