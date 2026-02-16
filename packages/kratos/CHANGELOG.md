@@ -3,6 +3,43 @@
 All notable changes to this project will be documented in this file. See
 [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [10.1.0](https://github.com/leancodepl/js_corelibrary/compare/v10.0.2...v10.1.0) (2026-02-16)
+
+### Bug Fixes
+
+- Add OIDC providers config to example app and fix type issues
+  ([6c7f13b](https://github.com/leancodepl/js_corelibrary/commit/6c7f13b63498314ccdd742b2656767d3f4dd62b3))
+- Address code review feedback
+  ([7830178](https://github.com/leancodepl/js_corelibrary/commit/7830178cba6147cd533bc6cbd7cd25e3c2d26fb1))
+- Properly type OidcProviderUiNode attributes to avoid 'any'
+  ([27acdce](https://github.com/leancodepl/js_corelibrary/commit/27acdce9a874dfbe8e30566fc19f9b51aa6314d9))
+- Remove unused imports and variables from OIDC provider implementation
+  ([2590a39](https://github.com/leancodepl/js_corelibrary/commit/2590a392e63181d0a6ea1ce4dc10ddf9b392c0d7))
+- Resolve build failures in kratos package
+  ([c356f93](https://github.com/leancodepl/js_corelibrary/commit/c356f9366fbf623d32829e58d53afd58e374ca7d))
+- Resolve linter errors and warnings
+  ([a900e5c](https://github.com/leancodepl/js_corelibrary/commit/a900e5c80664d4914114b0d2ca9f45fdb2c86854))
+- Update documentation to show correct provider capitalization
+  ([980b62b](https://github.com/leancodepl/js_corelibrary/commit/980b62b707ac63f61c864d37ddd580b7225f94d6))
+
+### Features
+
+- Add support for custom OIDC providers
+  ([a1ae459](https://github.com/leancodepl/js_corelibrary/commit/a1ae459ebb1a2d14bd9def97af7ec4dfec2e15da))
+- Add type-safe OIDC provider support
+  ([b52ab23](https://github.com/leancodepl/js_corelibrary/commit/b52ab233096eeb91fae6850e7c30e5b0cb0a5b15))
+- Make OidcFormProps generic with OidcProvidersConfig type
+  ([7957ff8](https://github.com/leancodepl/js_corelibrary/commit/7957ff84fb634b859a8a5f6bc114d2dc2ba3ec1d))
+- remove label from oidc provider type amd spread oidc components
+  ([aa25a5f](https://github.com/leancodepl/js_corelibrary/commit/aa25a5f7ff0bb6b1cd2e36d23b3c61dd3621d77e))
+- unify oidcProviderComponents implementations
+  ([74f7ad3](https://github.com/leancodepl/js_corelibrary/commit/74f7ad38211ff88826ffb21b9c73580854e27f3a))
+
+# Change Log
+
+All notable changes to this project will be documented in this file. See
+[Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
 ## [10.0.2](https://github.com/leancodepl/js_corelibrary/compare/v10.0.1...v10.0.2) (2026-02-13)
 
 **Note:** Version bump only for package @leancodepl/kratos
