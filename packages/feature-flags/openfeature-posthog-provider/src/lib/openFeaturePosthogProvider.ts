@@ -1,6 +1,6 @@
-import { ErrorCode } from "@openfeature/web-sdk"
 import type { EvaluationContext, JsonValue, Logger, Provider, ResolutionDetails } from "@openfeature/web-sdk"
 import type { PostHog } from "posthog-js"
+import { ErrorCode } from "@openfeature/web-sdk"
 
 /**
  * Delegates feature flag evaluation to PostHog (posthog-js). Use this to access

@@ -21,6 +21,7 @@
   "devDependencies": {
     "@nx/vite": "*",
     "vite": "*",
-    "vite-plugin-dts": "*"
+    "vite-plugin-dts": "*",
+    "vitest": "*"
   }
 }
