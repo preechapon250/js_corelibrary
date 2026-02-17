@@ -1,10 +1,4 @@
-import type {
-  EvaluationContext,
-  JsonValue,
-  Logger,
-  Provider,
-  ResolutionDetails,
-} from "@openfeature/web-sdk"
+import type { EvaluationContext, JsonValue, Logger, Provider, ResolutionDetails } from "@openfeature/web-sdk"
 import type { PostHog } from "posthog-js"
 import { ErrorCode, StandardResolutionReasons } from "@openfeature/web-sdk"
 
@@ -71,8 +65,68 @@ export class OpenFeaturePosthogProvider implements Provider {
   }
 
   private evaluate<T>(flagKey: string, defaultValue: T, flagType: FlagType): ResolutionDetails<T> {
+    if (flagType === "object") {
+      return this.evaluateObject(flagKey, defaultValue as JsonValue) as ResolutionDetails<T>
+    }
+
+    const value = this.client.getFeatureFlag(flagKey)
+    if (value === undefined) {
+      return {
+        value: defaultValue,
+        errorCode: ErrorCode.FLAG_NOT_FOUND,
+        reason: StandardResolutionReasons.ERROR,
+      }
+    }
+
+    const variant = typeof value === "string" ? value : undefined
+    const reason =
+      variant !== undefined
+        ? StandardResolutionReasons.TARGETING_MATCH
+        : value
+          ? StandardResolutionReasons.STATIC
+          : StandardResolutionReasons.DISABLED
+
+    if (flagType === "boolean") {
+      return {
+        value: !!value as T,
+        reason,
+      }
+    }
+
+    if (flagType === "string") {
+      return {
+        value: (typeof value === "string" ? value : String(value)) as T,
+        reason,
+      }
+    }
+
+    const raw = typeof value === "string" ? value : value ? "1" : "0"
+    const num = Number(raw)
+    if (Number.isNaN(num)) {
+      return {
+        value: defaultValue,
+        errorCode: ErrorCode.TYPE_MISMATCH,
+        reason: StandardResolutionReasons.ERROR,
+      }
+    }
+    return {
+      value: num as T,
+      reason,
+    }
+  }
+
+  private evaluateObject<T extends JsonValue>(flagKey: string, defaultValue: T): ResolutionDetails<T> {
     const result = this.client.getFeatureFlagResult(flagKey)
     if (result === undefined) {
+      return {
+        value: defaultValue,
+        errorCode: ErrorCode.FLAG_NOT_FOUND,
+        reason: StandardResolutionReasons.ERROR,
+      }
+    }
+
+    const payload = result.payload
+    if (payload === undefined || payload === null) {
       return {
         value: defaultValue,
         errorCode: ErrorCode.FLAG_NOT_FOUND,
@@ -87,61 +141,18 @@ export class OpenFeaturePosthogProvider implements Provider {
         ? StandardResolutionReasons.STATIC
         : StandardResolutionReasons.DISABLED
 
-    if (flagType === "boolean") {
+    try {
+      const parsed = typeof payload === "string" ? JSON.parse(payload) : payload
       return {
-        value: result.enabled as T,
-        ...(variant && { variant }),
+        value: parsed as T,
         reason,
       }
-    }
-
-    if (flagType === "object") {
-      const payload = result.payload
-      if (payload === undefined || payload === null) {
-        return {
-          value: defaultValue,
-          errorCode: ErrorCode.FLAG_NOT_FOUND,
-          reason: StandardResolutionReasons.ERROR,
-        }
-      }
-      try {
-        const value = typeof payload === "string" ? (JSON.parse(payload) as T) : (payload as T)
-        return {
-          value,
-          ...(variant && { variant }),
-          reason,
-        }
-      } catch {
-        return {
-          value: defaultValue,
-          errorCode: ErrorCode.PARSE_ERROR,
-          reason: StandardResolutionReasons.ERROR,
-        }
-      }
-    }
-
-    if (flagType === "string") {
-      const value = result.variant ?? (result.enabled ? "true" : "false")
-      return {
-        value: (typeof value === "string" ? value : String(value)) as T,
-        ...(variant && { variant }),
-        reason,
-      }
-    }
-
-    const raw = result.variant ?? (result.enabled ? "1" : "0")
-    const num = Number(raw)
-    if (Number.isNaN(num)) {
+    } catch {
       return {
         value: defaultValue,
-        errorCode: ErrorCode.TYPE_MISMATCH,
+        errorCode: ErrorCode.PARSE_ERROR,
         reason: StandardResolutionReasons.ERROR,
       }
-    }
-    return {
-      value: num as T,
-      ...(variant && { variant }),
-      reason,
     }
   }
 }

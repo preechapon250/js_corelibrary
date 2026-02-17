@@ -4,8 +4,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest"
 import { OpenFeaturePosthogProvider } from "./openFeaturePosthogProvider.js"
 
 function createMockClient(overrides: Partial<PostHog> = {}): PostHog {
+  const getFeatureFlagResult = vi.fn()
   return {
-    getFeatureFlagResult: vi.fn(),
+    getFeatureFlagResult,
+    getFeatureFlag: vi.fn((key: string) => {
+      const result = getFeatureFlagResult(key)
+      return result ? (result.variant ?? result.enabled) : undefined
+    }),
     ...overrides,
   } as unknown as PostHog
 }
@@ -42,7 +47,7 @@ describe("OpenFeaturePosthogProvider", () => {
         value: true,
         reason: StandardResolutionReasons.STATIC,
       })
-      expect(client.getFeatureFlagResult).toHaveBeenCalledWith("flag-a")
+      expect(client.getFeatureFlag).toHaveBeenCalledWith("flag-a")
     })
 
     it("returns flag value when disabled", () => {
@@ -87,10 +92,9 @@ describe("OpenFeaturePosthogProvider", () => {
 
       expect(result).toEqual({
         value: "variant-a",
-        variant: "variant-a",
         reason: StandardResolutionReasons.TARGETING_MATCH,
       })
-      expect(client.getFeatureFlagResult).toHaveBeenCalledWith("flag-a")
+      expect(client.getFeatureFlag).toHaveBeenCalledWith("flag-a")
     })
 
     it("converts non-string values to string", () => {
@@ -105,7 +109,6 @@ describe("OpenFeaturePosthogProvider", () => {
 
       expect(result).toEqual({
         value: "42",
-        variant: "42",
         reason: StandardResolutionReasons.TARGETING_MATCH,
       })
     })
@@ -136,7 +139,6 @@ describe("OpenFeaturePosthogProvider", () => {
 
       expect(result).toEqual({
         value: 42,
-        variant: "42",
         reason: StandardResolutionReasons.TARGETING_MATCH,
       })
     })
@@ -153,7 +155,6 @@ describe("OpenFeaturePosthogProvider", () => {
 
       expect(result).toEqual({
         value: 100,
-        variant: "100",
         reason: StandardResolutionReasons.TARGETING_MATCH,
       })
     })
@@ -295,7 +296,7 @@ describe("OpenFeaturePosthogProvider", () => {
         const value = ofClient.getBooleanValue("flag-a", false)
 
         expect(value).toBe(true)
-        expect(client.getFeatureFlagResult).toHaveBeenCalledWith("flag-a")
+        expect(client.getFeatureFlag).toHaveBeenCalledWith("flag-a")
       })
 
       it("getBooleanValue returns default when flag is disabled", () => {
@@ -326,7 +327,7 @@ describe("OpenFeaturePosthogProvider", () => {
         const value = ofClient.getStringValue("flag-a", "default")
 
         expect(value).toBe("variant-a")
-        expect(client.getFeatureFlagResult).toHaveBeenCalledWith("flag-a")
+        expect(client.getFeatureFlag).toHaveBeenCalledWith("flag-a")
       })
 
       it("returns default when flag is undefined", () => {
