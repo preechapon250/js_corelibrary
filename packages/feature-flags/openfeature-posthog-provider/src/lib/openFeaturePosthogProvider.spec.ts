@@ -153,82 +153,90 @@ describe("OpenFeaturePosthogProvider", () => {
       OpenFeature.setProvider(provider)
     })
 
-    it("getBooleanValue returns flag value when enabled", () => {
-      vi.mocked(client.isFeatureEnabled).mockReturnValue(true)
+    describe("getBooleanValue", () => {
+      it("getBooleanValue returns flag value when enabled", () => {
+        vi.mocked(client.isFeatureEnabled).mockReturnValue(true)
 
-      const ofClient = OpenFeature.getClient()
-      const value = ofClient.getBooleanValue("flag-a", false)
+        const ofClient = OpenFeature.getClient()
+        const value = ofClient.getBooleanValue("flag-a", false)
 
-      expect(value).toBe(true)
-      expect(client.isFeatureEnabled).toHaveBeenCalledWith("flag-a")
+        expect(value).toBe(true)
+        expect(client.isFeatureEnabled).toHaveBeenCalledWith("flag-a")
+      })
+
+      it("getBooleanValue returns default when flag is disabled", () => {
+        vi.mocked(client.isFeatureEnabled).mockReturnValue(false)
+
+        const ofClient = OpenFeature.getClient()
+        const value = ofClient.getBooleanValue("flag-b", true)
+
+        expect(value).toBe(false)
+      })
     })
 
-    it("getBooleanValue returns default when flag is disabled", () => {
-      vi.mocked(client.isFeatureEnabled).mockReturnValue(false)
+    describe("getStringValue", () => {
+      it("returns flag value", () => {
+        vi.mocked(client.getFeatureFlag).mockReturnValue("variant-a")
 
-      const ofClient = OpenFeature.getClient()
-      const value = ofClient.getBooleanValue("flag-b", true)
+        const ofClient = OpenFeature.getClient()
+        const value = ofClient.getStringValue("flag-a", "default")
 
-      expect(value).toBe(false)
+        expect(value).toBe("variant-a")
+        expect(client.getFeatureFlag).toHaveBeenCalledWith("flag-a")
+      })
+
+      it("returns default when flag is undefined", () => {
+        const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {})
+        vi.mocked(client.getFeatureFlag).mockReturnValue(undefined)
+
+        const ofClient = OpenFeature.getClient()
+        const value = ofClient.getStringValue("missing", "fallback")
+
+        expect(value).toBe("fallback")
+        consoleSpy.mockRestore()
+      })
     })
 
-    it("getStringValue returns flag value", () => {
-      vi.mocked(client.getFeatureFlag).mockReturnValue("variant-a")
+    describe("getNumberValue", () => {
+      it("returns flag value", () => {
+        vi.mocked(client.getFeatureFlag).mockReturnValue("42")
 
-      const ofClient = OpenFeature.getClient()
-      const value = ofClient.getStringValue("flag-a", "default")
+        const ofClient = OpenFeature.getClient()
+        const value = ofClient.getNumberValue("flag-a", 0)
 
-      expect(value).toBe("variant-a")
-      expect(client.getFeatureFlag).toHaveBeenCalledWith("flag-a")
+        expect(value).toBe(42)
+      })
+
+      it("returns default when flag is undefined", () => {
+        vi.mocked(client.getFeatureFlag).mockReturnValue(undefined)
+
+        const ofClient = OpenFeature.getClient()
+        const value = ofClient.getNumberValue("missing", 10)
+
+        expect(value).toBe(10)
+      })
     })
 
-    it("getStringValue returns default when flag is undefined", () => {
-      const consoleSpy = vi.spyOn(console, "error").mockImplementation(() => {})
-      vi.mocked(client.getFeatureFlag).mockReturnValue(undefined)
+    describe("getObjectValue", () => {
+      it("returns payload", () => {
+        const payload = { variant: "a", config: { key: "value" } }
+        vi.mocked(client.getFeatureFlagPayload).mockReturnValue(payload)
 
-      const ofClient = OpenFeature.getClient()
-      const value = ofClient.getStringValue("missing", "fallback")
+        const ofClient = OpenFeature.getClient()
+        const value = ofClient.getObjectValue("flag-a", {})
 
-      expect(value).toBe("fallback")
-      consoleSpy.mockRestore()
-    })
+        expect(value).toEqual(payload)
+        expect(client.getFeatureFlagPayload).toHaveBeenCalledWith("flag-a")
+      })
 
-    it("getNumberValue returns flag value", () => {
-      vi.mocked(client.getFeatureFlag).mockReturnValue("42")
+      it("returns default when payload is undefined", () => {
+        vi.mocked(client.getFeatureFlagPayload).mockReturnValue(undefined)
 
-      const ofClient = OpenFeature.getClient()
-      const value = ofClient.getNumberValue("flag-a", 0)
+        const ofClient = OpenFeature.getClient()
+        const value = ofClient.getObjectValue("missing", { default: true })
 
-      expect(value).toBe(42)
-    })
-
-    it("getNumberValue returns default when flag is undefined", () => {
-      vi.mocked(client.getFeatureFlag).mockReturnValue(undefined)
-
-      const ofClient = OpenFeature.getClient()
-      const value = ofClient.getNumberValue("missing", 10)
-
-      expect(value).toBe(10)
-    })
-
-    it("getObjectValue returns payload", () => {
-      const payload = { variant: "a", config: { key: "value" } }
-      vi.mocked(client.getFeatureFlagPayload).mockReturnValue(payload)
-
-      const ofClient = OpenFeature.getClient()
-      const value = ofClient.getObjectValue("flag-a", {})
-
-      expect(value).toEqual(payload)
-      expect(client.getFeatureFlagPayload).toHaveBeenCalledWith("flag-a")
-    })
-
-    it("getObjectValue returns default when payload is undefined", () => {
-      vi.mocked(client.getFeatureFlagPayload).mockReturnValue(undefined)
-
-      const ofClient = OpenFeature.getClient()
-      const value = ofClient.getObjectValue("missing", { default: true })
-
-      expect(value).toEqual({ default: true })
+        expect(value).toEqual({ default: true })
+      })
     })
   })
 })
