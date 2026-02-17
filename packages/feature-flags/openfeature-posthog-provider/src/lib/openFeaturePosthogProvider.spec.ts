@@ -12,8 +12,8 @@ function createMockClient(overrides: Partial<PostHog> = {}): PostHog {
   } as unknown as PostHog
 }
 
-const mockLogger = {} as Parameters<OpenFeaturePosthogProvider["resolveBooleanEvaluation"]>[3]
 const emptyContext = {} as Parameters<OpenFeaturePosthogProvider["resolveBooleanEvaluation"]>[2]
+const mockLogger = {} as Parameters<OpenFeaturePosthogProvider["resolveBooleanEvaluation"]>[3]
 
 describe("OpenFeaturePosthogProvider", () => {
   let provider: OpenFeaturePosthogProvider
