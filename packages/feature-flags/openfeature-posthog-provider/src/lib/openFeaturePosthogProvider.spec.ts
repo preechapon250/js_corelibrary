@@ -1,5 +1,5 @@
 import type { PostHog } from "posthog-js"
-import { ErrorCode, OpenFeature } from "@openfeature/web-sdk"
+import { ErrorCode, OpenFeature, StandardResolutionReasons } from "@openfeature/web-sdk"
 import { beforeEach, describe, expect, it, vi } from "vitest"
 import { OpenFeaturePosthogProvider } from "./openFeaturePosthogProvider.js"
 
@@ -38,7 +38,10 @@ describe("OpenFeaturePosthogProvider", () => {
 
       const result = provider.resolveBooleanEvaluation("flag-a", false, emptyContext, mockLogger)
 
-      expect(result).toEqual({ value: true })
+      expect(result).toEqual({
+        value: true,
+        reason: StandardResolutionReasons.STATIC,
+      })
       expect(client.getFeatureFlagResult).toHaveBeenCalledWith("flag-a")
     })
 
@@ -52,7 +55,10 @@ describe("OpenFeaturePosthogProvider", () => {
 
       const result = provider.resolveBooleanEvaluation("flag-b", true, emptyContext, mockLogger)
 
-      expect(result).toEqual({ value: false })
+      expect(result).toEqual({
+        value: false,
+        reason: StandardResolutionReasons.DISABLED,
+      })
     })
 
     it("returns default and FLAG_NOT_FOUND when flag is undefined", () => {
@@ -60,7 +66,11 @@ describe("OpenFeaturePosthogProvider", () => {
 
       const result = provider.resolveBooleanEvaluation("missing", true, emptyContext, mockLogger)
 
-      expect(result).toEqual({ value: true, errorCode: ErrorCode.FLAG_NOT_FOUND })
+      expect(result).toEqual({
+        value: true,
+        errorCode: ErrorCode.FLAG_NOT_FOUND,
+        reason: StandardResolutionReasons.ERROR,
+      })
     })
   })
 
@@ -75,7 +85,11 @@ describe("OpenFeaturePosthogProvider", () => {
 
       const result = provider.resolveStringEvaluation("flag-a", "default", emptyContext, mockLogger)
 
-      expect(result).toEqual({ value: "variant-a" })
+      expect(result).toEqual({
+        value: "variant-a",
+        variant: "variant-a",
+        reason: StandardResolutionReasons.TARGETING_MATCH,
+      })
       expect(client.getFeatureFlagResult).toHaveBeenCalledWith("flag-a")
     })
 
@@ -89,7 +103,11 @@ describe("OpenFeaturePosthogProvider", () => {
 
       const result = provider.resolveStringEvaluation("flag-a", "default", emptyContext, mockLogger)
 
-      expect(result).toEqual({ value: "42" })
+      expect(result).toEqual({
+        value: "42",
+        variant: "42",
+        reason: StandardResolutionReasons.TARGETING_MATCH,
+      })
     })
 
     it("returns default and FLAG_NOT_FOUND when flag is undefined", () => {
@@ -97,7 +115,11 @@ describe("OpenFeaturePosthogProvider", () => {
 
       const result = provider.resolveStringEvaluation("missing", "fallback", emptyContext, mockLogger)
 
-      expect(result).toEqual({ value: "fallback", errorCode: ErrorCode.FLAG_NOT_FOUND })
+      expect(result).toEqual({
+        value: "fallback",
+        errorCode: ErrorCode.FLAG_NOT_FOUND,
+        reason: StandardResolutionReasons.ERROR,
+      })
     })
   })
 
@@ -112,7 +134,11 @@ describe("OpenFeaturePosthogProvider", () => {
 
       const result = provider.resolveNumberEvaluation("flag-a", 0, emptyContext, mockLogger)
 
-      expect(result).toEqual({ value: 42 })
+      expect(result).toEqual({
+        value: 42,
+        variant: "42",
+        reason: StandardResolutionReasons.TARGETING_MATCH,
+      })
     })
 
     it("parses string numbers", () => {
@@ -125,7 +151,11 @@ describe("OpenFeaturePosthogProvider", () => {
 
       const result = provider.resolveNumberEvaluation("flag-a", 0, emptyContext, mockLogger)
 
-      expect(result).toEqual({ value: 100 })
+      expect(result).toEqual({
+        value: 100,
+        variant: "100",
+        reason: StandardResolutionReasons.TARGETING_MATCH,
+      })
     })
 
     it("returns default and FLAG_NOT_FOUND when flag is undefined", () => {
@@ -133,7 +163,11 @@ describe("OpenFeaturePosthogProvider", () => {
 
       const result = provider.resolveNumberEvaluation("missing", 10, emptyContext, mockLogger)
 
-      expect(result).toEqual({ value: 10, errorCode: ErrorCode.FLAG_NOT_FOUND })
+      expect(result).toEqual({
+        value: 10,
+        errorCode: ErrorCode.FLAG_NOT_FOUND,
+        reason: StandardResolutionReasons.ERROR,
+      })
     })
 
     it("returns default and TYPE_MISMATCH when value is not a valid number", () => {
@@ -146,7 +180,11 @@ describe("OpenFeaturePosthogProvider", () => {
 
       const result = provider.resolveNumberEvaluation("flag-a", 0, emptyContext, mockLogger)
 
-      expect(result).toEqual({ value: 0, errorCode: ErrorCode.TYPE_MISMATCH })
+      expect(result).toEqual({
+        value: 0,
+        errorCode: ErrorCode.TYPE_MISMATCH,
+        reason: StandardResolutionReasons.ERROR,
+      })
     })
   })
 
@@ -162,7 +200,10 @@ describe("OpenFeaturePosthogProvider", () => {
 
       const result = provider.resolveObjectEvaluation("flag-a", {}, emptyContext, mockLogger)
 
-      expect(result).toEqual({ value: payload })
+      expect(result).toEqual({
+        value: payload,
+        reason: StandardResolutionReasons.STATIC,
+      })
       expect(client.getFeatureFlagResult).toHaveBeenCalledWith("flag-a")
     })
 
@@ -176,7 +217,11 @@ describe("OpenFeaturePosthogProvider", () => {
 
       const result = provider.resolveObjectEvaluation("missing", { default: true }, emptyContext, mockLogger)
 
-      expect(result).toEqual({ value: { default: true }, errorCode: ErrorCode.FLAG_NOT_FOUND })
+      expect(result).toEqual({
+        value: { default: true },
+        errorCode: ErrorCode.FLAG_NOT_FOUND,
+        reason: StandardResolutionReasons.ERROR,
+      })
     })
 
     it("returns default and FLAG_NOT_FOUND when payload is null", () => {
@@ -189,7 +234,11 @@ describe("OpenFeaturePosthogProvider", () => {
 
       const result = provider.resolveObjectEvaluation("missing", { default: true }, emptyContext, mockLogger)
 
-      expect(result).toEqual({ value: { default: true }, errorCode: ErrorCode.FLAG_NOT_FOUND })
+      expect(result).toEqual({
+        value: { default: true },
+        errorCode: ErrorCode.FLAG_NOT_FOUND,
+        reason: StandardResolutionReasons.ERROR,
+      })
     })
 
     it("parses JSON string payload before returning", () => {
@@ -203,7 +252,10 @@ describe("OpenFeaturePosthogProvider", () => {
 
       const result = provider.resolveObjectEvaluation("flag-a", {}, emptyContext, mockLogger)
 
-      expect(result).toEqual({ value: { variant: "a", config: { key: "value" } } })
+      expect(result).toEqual({
+        value: { variant: "a", config: { key: "value" } },
+        reason: StandardResolutionReasons.STATIC,
+      })
       expect(client.getFeatureFlagResult).toHaveBeenCalledWith("flag-a")
     })
 
@@ -217,7 +269,11 @@ describe("OpenFeaturePosthogProvider", () => {
 
       const result = provider.resolveObjectEvaluation("flag-a", { default: true }, emptyContext, mockLogger)
 
-      expect(result).toEqual({ value: { default: true }, errorCode: ErrorCode.PARSE_ERROR })
+      expect(result).toEqual({
+        value: { default: true },
+        errorCode: ErrorCode.PARSE_ERROR,
+        reason: StandardResolutionReasons.ERROR,
+      })
     })
   })
 
