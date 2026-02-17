@@ -110,6 +110,10 @@ React component for image uploads.
 
 React client for feature flag management using OpenFeature standard.
 
+#### `@leancodepl/openfeature-posthog-provider`
+
+OpenFeature provider that delegates feature flag evaluation to PostHog. Use PostHog feature flags through the OpenFeature standard API.
+
 ### Analytics
 
 #### `@leancodepl/gtag`
