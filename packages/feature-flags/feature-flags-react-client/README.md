@@ -25,7 +25,7 @@ Creates React hooks for type-safe feature flag management using OpenFeature.
 
 ## Usage Examples
 
-### Basic Setup
+### Basic Setup (ConfigCat)
 
 ```typescript
 //featureFlags.ts
@@ -38,6 +38,24 @@ const flags = {
 }
 
 const provider = ConfigCatWebProvider.create("sdk-key")
+export const { FeatureFlagsProvider, useFeatureFlag } = mkFeatureFlags(flags, provider)
+```
+
+### Basic Setup (PostHog)
+
+```typescript
+//featureFlags.ts
+import { mkFeatureFlags } from "@leancodepl/feature-flags-react-client"
+import { OpenFeaturePosthogProvider } from "@leancodepl/openfeature-posthog-provider"
+import posthog from "posthog-js"
+
+const flags = {
+  enableNewFeature: { defaultValue: false },
+  maxRetries: { defaultValue: 3 },
+}
+
+posthog.init("YOUR_API_KEY")
+const provider = new OpenFeaturePosthogProvider(posthog)
 export const { FeatureFlagsProvider, useFeatureFlag } = mkFeatureFlags(flags, provider)
 ```
 
