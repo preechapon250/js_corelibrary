@@ -104,6 +104,9 @@
     },
     {
       "path": "./packages/nx-plugins"
+    },
+    {
+      "path": "./packages/feature-flags/openfeature-posthog-provider"
     }
   ]
 }

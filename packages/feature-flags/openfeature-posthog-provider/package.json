@@ -1,0 +1,62 @@
+{
+  "name": "@leancodepl/openfeature-posthog-provider",
+  "version": "0.0.1",
+  "license": "Apache-2.0",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "default": "./dist/index.js"
+    }
+  },
+  "dependencies": {
+    "posthog-js": "^1.347.0",
+    "@openfeature/web-sdk": "^1.7.0"
+  },
+  "devDependencies": {
+    "@nx/vite": "*",
+    "vite": "*",
+    "vite-plugin-dts": "*",
+    "vitest": "*"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leancodepl/js_corelibrary.git",
+    "directory": "packages/feature-flags/openfeature-posthog-provider"
+  },
+  "homepage": "https://github.com/leancodepl/js_corelibrary",
+  "bugs": {
+    "url": "https://github.com/leancodepl/js_corelibrary/issues"
+  },
+  "description": "OpenFeature provider that delegates feature flag evaluation to PostHog",
+  "keywords": [
+    "feature-flags",
+    "openfeature",
+    "posthog",
+    "typescript",
+    "javascript",
+    "leancode"
+  ],
+  "author": {
+    "name": "LeanCode",
+    "url": "https://leancode.co"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "CHANGELOG.md",
+    "!**/*.tsbuildinfo"
+  ]
+}
