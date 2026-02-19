@@ -2,8 +2,6 @@ import type { EvaluationContext, JsonValue, Logger, Provider, ResolutionDetails 
 import type { PostHog } from "posthog-js"
 import { ErrorCode, StandardResolutionReasons } from "@openfeature/web-sdk"
 
-type FlagType = "boolean" | "number" | "object" | "string"
-
 /**
  * Delegates feature flag evaluation to PostHog (posthog-js). Use this to access
  * PostHog feature flags through the OpenFeature standard API. Flags return default
@@ -34,7 +32,18 @@ export class OpenFeaturePosthogProvider implements Provider {
     _context: EvaluationContext,
     _logger: Logger,
   ): ResolutionDetails<boolean> {
-    return this.evaluate(flagKey, defaultValue, "boolean")
+    const result = this.evaluatePrimitive(flagKey, defaultValue)
+
+    if (result.errorCode !== undefined) {
+      return result
+    }
+
+    const { value, reason } = result
+
+    return {
+      value: !!value,
+      reason,
+    }
   }
 
   resolveStringEvaluation(
@@ -43,7 +52,18 @@ export class OpenFeaturePosthogProvider implements Provider {
     _context: EvaluationContext,
     _logger: Logger,
   ): ResolutionDetails<string> {
-    return this.evaluate(flagKey, defaultValue, "string")
+    const result = this.evaluatePrimitive(flagKey, defaultValue)
+
+    if (result.errorCode !== undefined) {
+      return result
+    }
+
+    const { value, reason } = result
+
+    return {
+      value: typeof value === "string" ? value : String(value),
+      reason,
+    }
   }
 
   resolveNumberEvaluation(
@@ -52,53 +72,13 @@ export class OpenFeaturePosthogProvider implements Provider {
     _context: EvaluationContext,
     _logger: Logger,
   ): ResolutionDetails<number> {
-    return this.evaluate(flagKey, defaultValue, "number")
-  }
+    const result = this.evaluatePrimitive(flagKey, defaultValue)
 
-  resolveObjectEvaluation<T extends JsonValue>(
-    flagKey: string,
-    defaultValue: T,
-    _context: EvaluationContext,
-    _logger: Logger,
-  ): ResolutionDetails<T> {
-    return this.evaluate(flagKey, defaultValue, "object") as ResolutionDetails<T>
-  }
-
-  private evaluate<T>(flagKey: string, defaultValue: T, flagType: FlagType): ResolutionDetails<T> {
-    if (flagType === "object") {
-      return this.evaluateObject(flagKey, defaultValue as JsonValue) as ResolutionDetails<T>
+    if (result.errorCode !== undefined) {
+      return result
     }
 
-    const value = this.client.getFeatureFlag(flagKey)
-    if (value === undefined) {
-      return {
-        value: defaultValue,
-        errorCode: ErrorCode.FLAG_NOT_FOUND,
-        reason: StandardResolutionReasons.ERROR,
-      }
-    }
-
-    const variant = typeof value === "string" ? value : undefined
-    const reason =
-      variant !== undefined
-        ? StandardResolutionReasons.TARGETING_MATCH
-        : value
-          ? StandardResolutionReasons.STATIC
-          : StandardResolutionReasons.DISABLED
-
-    if (flagType === "boolean") {
-      return {
-        value: !!value as T,
-        reason,
-      }
-    }
-
-    if (flagType === "string") {
-      return {
-        value: (typeof value === "string" ? value : String(value)) as T,
-        reason,
-      }
-    }
+    const { value, reason } = result
 
     const raw = typeof value === "string" ? value : value ? "1" : "0"
     const num = Number(raw)
@@ -110,12 +90,17 @@ export class OpenFeaturePosthogProvider implements Provider {
       }
     }
     return {
-      value: num as T,
+      value: num,
       reason,
     }
   }
 
-  private evaluateObject<T extends JsonValue>(flagKey: string, defaultValue: T): ResolutionDetails<T> {
+  resolveObjectEvaluation<T extends JsonValue>(
+    flagKey: string,
+    defaultValue: T,
+    _context: EvaluationContext,
+    _logger: Logger,
+  ): ResolutionDetails<T> {
     const result = this.client.getFeatureFlagResult(flagKey)
     if (result === undefined) {
       return {
@@ -153,6 +138,30 @@ export class OpenFeaturePosthogProvider implements Provider {
         errorCode: ErrorCode.PARSE_ERROR,
         reason: StandardResolutionReasons.ERROR,
       }
+    }
+  }
+
+  private evaluatePrimitive<T>(flagKey: string, defaultValue: T) {
+    const value = this.client.getFeatureFlag(flagKey)
+    if (value === undefined) {
+      return {
+        value: defaultValue,
+        errorCode: ErrorCode.FLAG_NOT_FOUND,
+        reason: StandardResolutionReasons.ERROR,
+      }
+    }
+
+    const variant = typeof value === "string" ? value : undefined
+    const reason =
+      variant !== undefined
+        ? StandardResolutionReasons.TARGETING_MATCH
+        : value
+          ? StandardResolutionReasons.STATIC
+          : StandardResolutionReasons.DISABLED
+
+    return {
+      value,
+      reason,
     }
   }
 }
